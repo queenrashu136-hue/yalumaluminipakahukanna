@@ -39,35 +39,84 @@ overflow:hidden;
 color:var(--text);
 }
 
-/* Hearts */
-.hearts span{
-position:absolute;
-bottom:-40px;
-font-size:22px;
-animation:float 12s linear infinite;
-opacity:.6
-}
-@keyframes float{
-0%{transform:translateY(0);opacity:0}
-10%{opacity:1}
-100%{transform:translateY(-120vh);opacity:0}
-}
-
-/* Sparkles */
-.sparkle{
-position:absolute;
-width:6px;height:6px;
-background:#fff;
-border-radius:50%;
-animation:sparkle 3s infinite;
-opacity:.7
-}
-@keyframes sparkle{
-0%{transform:scale(0)}
-50%{transform:scale(1)}
-100%{transform:scale(0)}
+/* ===== WELCOME POPUP ===== */
+.welcome-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+backdrop-filter:blur(8px);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+animation:fadeIn .6s;
 }
 
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
+}
+
+.welcome-box{
+width:320px;
+padding:25px;
+border-radius:25px;
+background:var(--box);
+text-align:center;
+box-shadow:0 0 35px var(--accent);
+animation:pop .6s;
+}
+
+@keyframes pop{
+from{transform:scale(.8)}
+to{transform:scale(1)}
+}
+
+.welcome-box h2{
+margin:10px 0;
+text-shadow:0 0 12px var(--accent);
+}
+
+.follow-btn{
+display:block;
+margin:15px 0;
+padding:12px;
+border-radius:30px;
+background:linear-gradient(135deg,#ff69b4,#ff1493);
+color:#fff;
+font-weight:bold;
+text-decoration:none;
+box-shadow:0 0 15px var(--accent);
+}
+
+.skip-btn{
+margin-top:10px;
+background:none;
+border:none;
+color:#fff;
+cursor:pointer;
+opacity:.8;
+}
+
+#mandatory-warning{
+margin-top:10px;
+color:transparent;
+-webkit-text-stroke:1px #ff69b4;
+font-weight:bold;
+font-size:0.9rem;
+display:none;
+}
+
+/* shake animation */
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-5px)}
+  50%{transform:translateX(5px)}
+  75%{transform:translateX(-5px)}
+  100%{transform:translateX(0)}
+}
+
+/* ===== MAIN BOX ===== */
 .box{
 width:340px;
 padding:25px;
@@ -89,12 +138,7 @@ color:var(--accent);
 text-shadow:0 0 15px var(--accent);
 animation:bounce 2s infinite;
 }
-@keyframes bounce{
-50%{transform:translateY(-8px)}
-}
-
-h3{text-shadow:0 0 10px var(--accent)}
-h6{font-weight:400}
+@keyframes bounce{50%{transform:translateY(-8px)}}
 
 .input-container{
 margin-top:20px;
@@ -103,9 +147,7 @@ border-radius:30px;
 overflow:hidden;
 background:#fff;
 box-shadow:0 0 15px var(--accent);
-transition:.2s
 }
-.input-container:active{transform:scale(.97)}
 .input-container input{
 width:70%;
 border:none;
@@ -121,15 +163,7 @@ background:linear-gradient(135deg,#ff69b4,#ff1493);
 color:#fff;
 font-weight:bold
 }
-.input-container button:active{transform:scale(.92)}
 
-#pair{margin-top:12px;animation:fade .4s}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-
-#copy{cursor:pointer;animation:pulse 1.5s infinite}
-@keyframes pulse{50%{transform:scale(1.1)}}
-
-/* Loader */
 .loader{
 display:none;
 margin:15px auto;
@@ -141,7 +175,6 @@ animation:spin 1s linear infinite
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Toast */
 .toast{
 position:fixed;
 bottom:20px;
@@ -155,7 +188,6 @@ display:none;
 box-shadow:0 0 15px var(--accent)
 }
 
-/* Theme button */
 .theme{
 position:fixed;
 top:15px;
@@ -172,18 +204,27 @@ font-weight:bold
 </head>
 <body>
 
-<button class="theme" onclick="toggleTheme()">🌙 / 🎀</button>
+<!-- 🌸 WELCOME POPUP -->
+<div class="welcome-overlay" id="welcome">
+  <div class="welcome-box">
+    <i class="fas fa-heart" style="font-size:2.5rem;color:var(--accent)"></i>
+    <h2>Welcome 💖</h2>
+    <p>Follow our WhatsApp Channel to continue</p>
 
-<div class="hearts">
-<span style="left:10%">💖</span>
-<span style="left:30%">💕</span>
-<span style="left:50%">💗</span>
-<span style="left:70%">💞</span>
-<span style="left:90%">💓</span>
+    <a class="follow-btn" 
+       href="https://whatsapp.com/channel/0029Vb7RfVJ0AgWJdoW3Z12f" 
+       target="_blank"
+       onclick="closeWelcome()">
+       👉 Follow Channel
+    </a>
+
+    <button class="skip-btn" onclick="showMandatoryWarning()">Skip</button>
+    
+    <p id="mandatory-warning">⚠ You must follow the channel to continue!</p>
+  </div>
 </div>
 
-<div class="sparkle" style="top:20%;left:20%"></div>
-<div class="sparkle" style="top:60%;left:80%"></div>
+<button class="theme" onclick="toggleTheme()">🌙 / 🎀</button>
 
 <div class="box">
 <i class="fa fa-user"></i>
@@ -209,6 +250,18 @@ let b=document.getElementById("submit");
 let c=document.getElementById("number");
 let l=document.getElementById("loader");
 let t=document.getElementById("toast");
+
+function closeWelcome(){
+  document.getElementById("welcome").style.display="none";
+}
+
+function showMandatoryWarning(){
+  const w = document.getElementById("mandatory-warning");
+  w.style.display="block";
+  w.style.color="transparent";
+  w.style.animation = "shake 0.5s";
+  setTimeout(()=> w.style.animation="",500);
+}
 
 function showToast(msg){
 t.innerText=msg;
