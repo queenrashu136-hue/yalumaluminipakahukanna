@@ -4192,97 +4192,87 @@ wa.me/94764085107
 
 const { proto } = require('@whiskeysockets/baileys');
 
-case 'menu': {
-try { await socket.sendMessage(sender, { react: { text: "🗒️", key: msg.key } }); } catch(e){}
+case 'menu':
+case 'panel':
+case 'list': {
+  // 1. React to the command
+  await socket.sendMessage(sender, { react: { text: '📜', key: msg.key } });
 
-try {
-const startTime = socketCreationTime.get(number) || Date.now();
-const uptime = Math.floor((Date.now() - startTime) / 1000);
-const hours = Math.floor(uptime / 3600);
-const minutes = Math.floor((uptime % 3600) / 60);
-const seconds = Math.floor(uptime % 60);
+  try {
+    // 2. Get basic info & Configs (Setting එකේ වගේම)
+    const sanitized = (number || '').replace(/[^0-9]/g, '');
+    const currentConfig = await loadUserConfigFromMongo(sanitized) || {};
+    const botName = currentConfig.botName || config.BOT_NAME || 'MY BOT';
+    const prefix = currentConfig.PREFIX || config.PREFIX || '.';
+    const ownerNum = config.OWNER_NUMBER;
 
-// load per-session config (logo, botName)  
-let userCfg = {};  
-try { if (number && typeof loadUserConfigFromMongo === 'function') userCfg = await loadUserConfigFromMongo((number || '').replace(/[^0-9]/g, '')) || {}; }  
-catch(e){ console.warn('menu: failed to load config', e); userCfg = {}; }  
+    // Time & Date setup
+    const date = new Date().toLocaleDateString('si-LK'); // Sri Lanka Date
+    const time = new Date().toLocaleTimeString('si-LK'); // Sri Lanka Time
 
-const title = userCfg.botName || '𝐐𝐔𝐄𝐄𝐍-𝐑𝐀𝐒𝐇𝐔-𝐌𝐃';  
+    // 3. මෙනු එකේ ලිස්ට් එක (Sections විදියට Commands වෙන් කරලා)
+    const sections = [
+      {
+        title: "📥 DOWNLOADER",
+        rows: [
+          { title: "Download Menu", rowId: `${prefix}download`, description: "Download Menu" }
+        ]
+      },
+      {
+        title: "Creative Menu",
+        rows: [
+          { title: "Creative Main Menu", rowId: `${prefix}creative`, description: "Creative Menu" }
+        ]
+      },
+      {
+        title: "🛠️ TOOLS & EXTRAS",
+        rows: [
+          { title: "Tool Menu", rowId: `${prefix}tools`, description: "Dtec Tool Menu" }
+        ]
+      },
+      {
+        title: "⚙️ SETTINGS & OWNER",
+        rows: [
+          { title: "Bot Settings", rowId: `${prefix}setting`, description: "Open control panel" },
+          { title: "Owner", rowId: `${prefix}owner`, description: "Owner Of the bot" },
+          { title: "System Info", rowId: `${prefix}ping`, description: "Check ping speed" }
+        ]
+      }
+    ];
 
-// 🔹 Fake contact for Meta AI mention  
-const shonux = {  
-    key: {  
-        remoteJid: "status@broadcast",  
-        participant: "0@s.whatsapp.net",  
-        fromMe: false,  
-        id: "META_AI_FAKE_ID_MENU"  
-    },  
-    message: {  
-        contactMessage: {  
-            displayName: title,  
-            vcard: `BEGIN:VCARD
+    // 4. Menu එකේ උඩින් පෙන්නන විස්තරය (Header Text)
+    const text = `
+╭───「 🤖 *${botName} MENU* 」
+│
+│ 👋 *Hi,* @${sender.split('@')[0]}
+│ 📅 *Date:* ${date}
+│ ⌚ *Time:* ${time}
+│ 🧩 *Prefix:* [ ${prefix} ]
+│ 👑 *Owner:* ${ownerNum}
+│
+│ 👇 *Click "OPEN MENU" to see commands*
+╰────────────────────●
+`;
+ const menuimg = "https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg";
+    // 5. List Message එක යැවීම
+    const listMessage = {
+      text: text,
+      image:{url:menuimg},
+      footer: `🔥 POWERED BY ${botName} 🔥`,
+      title: "Main Command List",
+      buttonText: "📜 OPEN MENU", // බටන් එකේ නම
+      sections,
+      mentions: [sender] // මෙන්ශන් එක වැඩ කරන්න දාන්න ඕන
+    };
 
-VERSION:3.0
-N:${title};;;;
-FN:${title}
-ORG:Meta Platforms
-TEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002
-END:VCARD`
+    await socket.sendMessage(sender, listMessage, { quoted: msg });
+
+  } catch (e) {
+    console.error('Menu command error:', e);
+    await socket.sendMessage(sender, { text: "*❌ Menu එක ලෝඩ් කරන්න බැරි උනා!*" }, { quoted: msg });
+  }
+  break;
 }
-}
-};
-
-const text = `
-_📜 ${title} Menu List ..._
-
-*📄 𝐁օԵ 𝐍αตҽ :*
-> ${title}
-*⏳ 𝐑մղ 𝐓íตҽ :*
-> ${hours}h ${minutes}m ${seconds}s
-*🥷 𝐎աղҽɾ :*
-> ${config.OWNER_NAME || 'Nipun Harshana'}
-*📡 𝐕ҽɾsíօղ :*
-> ${config.BOT_VERSION || '0.0001+'}
-
-*🔽 Choose A Category From The Menu Below*
-
-*© ᴘᴏᴡᴇʀᴅ ʙʏ ${title} 🎀*
-`.trim();
-
-const buttons = [  
-  { buttonId: `${config.PREFIX}download`, buttonText: { displayText: "📥 Dᴀᴡɴʟᴏᴀᴅ Mᴇɴᴜ" }, type: 1 },  
-  { buttonId: `${config.PREFIX}creative`, buttonText: { displayText: "🎨 Cʀᴇᴀᴛɪᴠᴇ Mᴇɴᴜ" }, type: 1 },  
-  { buttonId: `${config.PREFIX}tools`, buttonText: { displayText: "🛠️ Tᴏᴏʟꜱ Mᴇɴᴜ" }, type: 1 },  
-  { buttonId: `${config.PREFIX}alive`, buttonText: { displayText: "👋 Aʟɪᴠᴇ" }, type: 1 },  
-  { buttonId: `${config.PREFIX}system`, buttonText: { displayText: "🕹️ Sʏꜱᴛᴇᴍ" }, type: 1 }  
-];  
-
-const defaultImg = 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg';  
-const useLogo = userCfg.logo || defaultImg;  
-
-// build image payload (url or buffer)  
-let imagePayload;  
-if (String(useLogo).startsWith('http')) imagePayload = { url: useLogo };  
-else {  
-  try { imagePayload = fs.readFileSync(useLogo); } catch(e){ imagePayload = { url: defaultImg }; }  
-}  
-
-await socket.sendMessage(sender, {  
-  image: imagePayload,  
-  caption: text,  
-  footer: "Oωηєя Bу ꪶ𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃ꫂ ᴰ ᵀ ᶻ",  
-  buttons,  
-  headerType: 4  
-}, { quoted: shonux });
-
-} catch (err) {
-console.error('menu command error:', err);
-try { await socket.sendMessage(sender, { text: '❌ Failed to show menu.' }, { quoted: msg }); } catch(e){}
-}
-break;
-}
-
-
 // ==================== DOWNLOAD MENU ====================
 case 'download': {
   try { await socket.sendMessage(sender, { react: { text: "⬇️", key: msg.key } }); } catch(e){}
