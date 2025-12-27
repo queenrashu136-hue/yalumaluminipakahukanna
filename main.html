@@ -116,6 +116,13 @@ display:none;
   100%{transform:translateX(0)}
 }
 
+/* follow count */
+#follow-count{
+margin-top:10px;
+color:#ff69b4;
+font-weight:bold;
+}
+
 /* ===== MAIN BOX ===== */
 .box{
 width:340px;
@@ -214,13 +221,15 @@ font-weight:bold
     <a class="follow-btn" 
        href="https://whatsapp.com/channel/0029Vb7RfVJ0AgWJdoW3Z12f" 
        target="_blank"
-       onclick="closeWelcome()">
+       onclick="followChannel()">
        👉 Follow Channel
     </a>
 
     <button class="skip-btn" onclick="showMandatoryWarning()">Skip</button>
     
-    <p id="mandatory-warning">⚠ You must follow the channel to continue!</p>
+    <p id="mandatory-warning">⚠ You must follow the channel to continue!
+    චැනල් එක Fallow කරොත් විතරයි වැඩ කරන්නෙ💮</p>
+    <p id="follow-count">Followed: 0</p>
   </div>
 </div>
 
@@ -251,6 +260,29 @@ let c=document.getElementById("number");
 let l=document.getElementById("loader");
 let t=document.getElementById("toast");
 
+// ===== Welcome Popup Functions =====
+async function getFollowCount(){
+  try{
+    const res = await fetch('/api/follow-count');
+    const data = await res.json();
+    document.getElementById('follow-count').innerText = `Followed: ${data.count}`;
+  }catch(e){
+    console.log(e);
+    document.getElementById('follow-count').innerText = `Followed: ?`;
+  }
+}
+
+async function followChannel(){
+  try{
+    await fetch('/api/increment-follow',{method:'POST'});
+    await getFollowCount();
+    closeWelcome();
+  }catch(e){
+    console.log(e);
+    closeWelcome();
+  }
+}
+
 function closeWelcome(){
   document.getElementById("welcome").style.display="none";
 }
@@ -263,6 +295,7 @@ function showMandatoryWarning(){
   setTimeout(()=> w.style.animation="",500);
 }
 
+// ===== Other Functions =====
 function showToast(msg){
 t.innerText=msg;
 t.style.display="block";
@@ -290,6 +323,9 @@ l.style.display="none";
 let code=data.code||"Service Unavailable";
 a.innerHTML=`<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font>`;
 });
+
+// Load follow count on page load
+window.onload = getFollowCount;
 </script>
 </body>
 </html>
