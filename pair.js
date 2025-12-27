@@ -5817,8 +5817,398 @@ case 'xvideo': {
   }
   break;
 }
-case 'xnxx':
-case 'xnxxvideo': {
+
+// ============NEWUPDATE==============================
+case 'xham': {
+    const metaQuote = {
+        key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_MEDIA" },
+        message: { contactMessage: { displayName: "DTEC XHAM GENERATOR", vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:MovaNest\nORG:Xham Service\nEND:VCARD` } }
+    };
+
+    // 🛠️ FIX: msg.body වෙනුවට ආරක්ෂිතව Text එක ගන්න විදිය
+    const text = msg.message?.conversation || 
+                 msg.message?.extendedTextMessage?.text || 
+                 msg.message?.imageMessage?.caption || 
+                 msg.message?.videoMessage?.caption || '';
+
+    // Command එක (.xham) අයින් කරලා ඉතුරු ටික ගන්නවා
+    const query = text.replace(/^\S+\s+/, '').trim() || 'random';
+
+    if (!query) {
+        return await socket.sendMessage(sender, { text: '❌ *Please provide a query.*' }, { quoted: metaQuote });
+    }
+
+    try {
+        const searchResponse = await axios.get(`https://movanest.zone.id/v2/xhamsearch?query=${encodeURIComponent(query)}`);
+        const { results } = searchResponse.data;
+
+        if (!results || results.length === 0) {
+            await socket.sendMessage(sender, { text: '❌ *No results found.*' }, { quoted: metaQuote });
+            break;
+        }
+
+        const randomItem = results[Math.floor(Math.random() * results.length)];
+        const { title, duration, url } = randomItem; 
+
+        // Payload Construction
+        const payloadNormal = JSON.stringify({ u: url, t: title.substring(0, 30), type: 'n' });
+        const payloadDoc = JSON.stringify({ u: url, t: title.substring(0, 30), type: 'd' });
+
+        const caption = `🔥 *${botName} Xham Search: ${query}*\n\n📖 *Title:* ${title}\n⏱️ *Duration:* ${duration}\n\nPowered by MovaNest API\n\n*Choose delivery method:*\n> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`;
+
+        const buttons = [
+            { buttonId: `${config.PREFIX}xham-dl ${payloadNormal}`, buttonText: { displayText: "▶️ View Normally" }, type: 1 },
+            { buttonId: `${config.PREFIX}xham-dl ${payloadDoc}`, buttonText: { displayText: "📥 DL as Document" }, type: 1 }
+        ];
+        
+        await socket.sendMessage(sender, { 
+            text: caption, 
+            buttons, 
+            headerType: 1 
+        }, { quoted: metaQuote });
+
+    } catch (e) {
+        console.error(e);
+        await socket.sendMessage(sender, { text: '❌ *Error fetching Xham list.*' });
+    }
+    break;
+}
+
+case 'xham-dl': {
+    try {
+        // 🛠️ FIX: Button ID එක හරියටම ගන්න විදිය
+        // අපි මුලින්ම බලනවා මේක Button එකක් click කිරීමක්ද කියලා
+        const buttonId = msg.message?.buttonsResponseMessage?.selectedButtonId || 
+                         msg.message?.templateButtonReplyMessage?.selectedId || 
+                         msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+                         msg.message?.conversation || 
+                         msg.message?.extendedTextMessage?.text || '';
+
+        // JSON Payload එක වෙන් කරගැනීම
+        // දැන් අපි buttonId එක ඇතුලේ '{' ලකුණ තියෙනවද බලනවා
+        const jsonStartIndex = buttonId.indexOf('{');
+        
+        if (jsonStartIndex === -1) {
+            console.log("Error: JSON not found in Button ID");
+            // JSON නැත්නම් නිකන් ඉන්න (Reply කරන්න එපා, නැත්නම් බොට් පිස්සු කෙළියි)
+            break; 
+        }
+
+        const jsonStr = buttonId.slice(jsonStartIndex);
+        const data = JSON.parse(jsonStr);
+        const { u: pageUrl, t: title, type } = data;
+
+        await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
+
+        const detailResponse = await axios.get(`https://movanest.zone.id/v2/xhamdetail?url=${encodeURIComponent(pageUrl)}`);
+        const { results: detailResult } = detailResponse.data;
+
+        if (!detailResult || !detailResult.videoUrl) {
+            await socket.sendMessage(sender, { text: '❌ *Failed to fetch video source.*' }, { quoted: msg });
+            break;
+        }
+
+        const videoUrl = detailResult.videoUrl;
+        const caption = `🔥 *Xham: ${title}*\n\n> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`;
+
+        if (type === 'n') {
+            await socket.sendMessage(sender, { video: { url: videoUrl }, caption: caption }, { quoted: msg });
+        } else {
+            const cleanTitle = (title || 'video').replace(/[^a-zA-Z0-9]/g, '_');
+            await socket.sendMessage(sender, { document: { url: videoUrl }, mimetype: 'video/mp4', fileName: `${cleanTitle}.mp4`, caption: caption }, { quoted: msg });
+        }
+
+    } catch (e) {
+        console.error("Xham Download Error:", e);
+        // Error එකක් ආවොත් විතරක් reply කරන්න
+        await socket.sendMessage(sender, { text: '❌ *Error downloading video.*' }, { quoted: msg });
+    }
+    break;
+}
+case 'xnxx': {
+    const metaQuote = {
+        key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_MEDIA" },
+        message: { contactMessage: { displayName: "DTEC XNXX GENERATOR", vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:MovaNest\nORG:XNXX Service\nEND:VCARD` } }
+    };
+
+    // 🛠️ FIX 1: msg.body වෙනුවට ආරක්ෂිතව Text එක ගන්න විදිය
+    const text = msg.message?.conversation || 
+                 msg.message?.extendedTextMessage?.text || 
+                 msg.message?.imageMessage?.caption || 
+                 msg.message?.videoMessage?.caption || '';
+
+    // Command එක (.xnxx) අයින් කරලා Query එක විතරක් ගන්නවා
+    const query = text.replace(/^\S+\s+/, '').trim() || 'random';
+
+    if (!query) {
+        return await socket.sendMessage(sender, { text: '❌ *Please provide a query. Example: .xnxx mom*' }, { quoted: metaQuote });
+    }
+
+    try {
+        // 1. ඉස්සෙල්ලා Search කරලා රිසල්ට් එක ගන්නවා
+        const response = await axios.get(`https://movanest.zone.id/v2/xnxx?query=${encodeURIComponent(query)}`);
+        const { result } = response.data;
+
+        if (!result || result.length === 0) {
+            await socket.sendMessage(sender, { text: '❌ *No results found.*' }, { quoted: metaQuote });
+            break;
+        }
+
+        // Random Item එකක් තෝරාගැනීම
+        const randomItem = result[Math.floor(Math.random() * result.length)];
+        const { title, info, link } = randomItem; // මෙතන 'link' කියන්නේ Page URL එකට
+
+        // ⚠️ වැදගත්: අපි Button එකේ යවන්නේ Page URL එක විතරයි.
+        // Title එක දිග වැඩි වුනොත් Button එක කැඩෙන නිසා අකුරු 30කට සීමා කරනවා
+        const cleanTitle = title.substring(0, 30);
+
+        const caption = `🔥 *${botName} XNXX Search: ${query}*\n\n📖 *Title:* ${title}\n📊 *Info:* ${info}\n\n*Select Quality & Type:*\n> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`;
+
+        const buttons = [
+            // type: 'n' (normal), 'd' (document) | q: 'h' (high), 'l' (low)
+            { buttonId: `${config.PREFIX}xnxx-dl ${JSON.stringify({ u: link, t: cleanTitle, type: 'n', q: 'h' })}`, buttonText: { displayText: "▶️ Normal High" }, type: 1 },
+            { buttonId: `${config.PREFIX}xnxx-dl ${JSON.stringify({ u: link, t: cleanTitle, type: 'n', q: 'l' })}`, buttonText: { displayText: "▶️ Normal Low" }, type: 1 },
+            { buttonId: `${config.PREFIX}xnxx-dl ${JSON.stringify({ u: link, t: cleanTitle, type: 'd', q: 'h' })}`, buttonText: { displayText: "📥 Doc High" }, type: 1 },
+            { buttonId: `${config.PREFIX}xnxx-dl ${JSON.stringify({ u: link, t: cleanTitle, type: 'd', q: 'l' })}`, buttonText: { displayText: "📥 Doc Low" }, type: 1 }
+        ];
+        
+        await socket.sendMessage(sender, { 
+            text: caption, 
+            buttons, 
+            headerType: 1 
+        }, { quoted: metaQuote });
+
+    } catch (e) {
+        console.error(e);
+        await socket.sendMessage(sender, { text: '❌ *Error fetching XNXX list.*' });
+    }
+    break;
+}
+
+// Download Command එක
+case 'xnxx-dl': {
+    try {
+        // 🛠️ FIX: Button ID එක හරියටම ගන්න විදිය (Text එක ගත්තොත් වැඩ කරන්නේ නෑ)
+        const buttonId = msg.message?.buttonsResponseMessage?.selectedButtonId || 
+                         msg.message?.templateButtonReplyMessage?.selectedId || 
+                         msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+                         msg.message?.conversation || 
+                         msg.message?.extendedTextMessage?.text || '';
+
+        // JSON Payload එක වෙන් කරගැනීම
+        // Button ID එක ඇතුලේ '{' ලකුණ තියෙන තැන හොයනවා
+        const jsonStartIndex = buttonId.indexOf('{');
+        
+        if (jsonStartIndex === -1) {
+             console.log("Invalid Button Response: No JSON found");
+             break;
+        }
+
+        const jsonStr = buttonId.slice(jsonStartIndex);
+        const data = JSON.parse(jsonStr);
+        const { u: pageUrl, t: title, type, q: quality } = data;
+
+        await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
+
+        // 2. Download Link එක ලබා ගැනීම
+        const dlResponse = await axios.get(`https://movanest.zone.id/v2/xnxx?url=${encodeURIComponent(pageUrl)}`);
+        const dlResult = dlResponse.data.result;
+
+        if (!dlResult || !dlResult.files) {
+            await socket.sendMessage(sender, { text: '❌ *Failed to fetch download links.*' }, { quoted: msg });
+            break;
+        }
+
+        // Quality එක අනුව URL එක තෝරාගැනීම
+        const videoUrl = (quality === 'h') ? dlResult.files.high : dlResult.files.low;
+
+        if (!videoUrl) {
+            await socket.sendMessage(sender, { text: '❌ *Selected quality not available.*' }, { quoted: msg });
+            break;
+        }
+
+        const caption = `🔥 *XNXX: ${title}*\n\n📺 *Quality:* ${quality === 'h' ? 'High' : 'Low'}\n> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`;
+
+        // 3. වීඩියෝ එක යැවීම
+        if (type === 'n') {
+            // Normal Video
+            await socket.sendMessage(sender, {
+                video: { url: videoUrl },
+                caption: caption
+            }, { quoted: msg });
+        } else {
+            // Document Video
+            const cleanTitleName = (title || 'video').replace(/[^a-zA-Z0-9]/g, '_');
+            await socket.sendMessage(sender, {
+                document: { url: videoUrl },
+                mimetype: 'video/mp4',
+                fileName: `${cleanTitleName}.mp4`,
+                caption: caption
+            }, { quoted: msg });
+        }
+
+    } catch (e) {
+        console.error("XNXX Download Error:", e);
+        await socket.sendMessage(sender, { text: '❌ *Error downloading video. Link might be expired.*' }, { quoted: msg });
+    }
+    break;
+}
+case 'ai':
+case 'chat':
+case 'gpt': {
+    try {
+        // 1. Text එක ගන්න විදිය
+        const text = msg.message?.conversation || 
+                     msg.message?.extendedTextMessage?.text || 
+                     msg.message?.imageMessage?.caption || '';
+                     
+        const q = text.replace(/^[.\/!](ai|chat|gpt)\s*/i, '').trim();
+
+        if (!q) {
+            return await socket.sendMessage(sender, { 
+                text: '⁉️ *මට මැසේජ් එකක් දෙන්න.* (E.g: .ai Who is iron man?)' 
+            }, { quoted: msg });
+        }
+
+        // 2. Bot Name Load Logic
+        const sanitized = (number || '').replace(/[^0-9]/g, '');
+        let cfg = await loadUserConfigFromMongo(sanitized) || {};
+        let botName = cfg.botName || 'Dtec AI';
+
+        // 3. Fake Typing Effect (Human Look)
+        await socket.sendMessage(sender, { react: { text: '✨', key: msg.key } });
+        await socket.sendPresenceUpdate('composing', sender); 
+
+        // 4. API Request (Free No-Key API: Hercai / DarkYasiya)
+        // මේක Free දෙන API එකක්. Key ඕන නෑ.
+        const response = await axios.get(`https://hercai.onrender.com/v3/hercai?question=${encodeURIComponent(q)}`);
+        
+        const aiReply = response.data?.reply;
+
+        if (!aiReply) {
+            await socket.sendMessage(sender, { text: '❌ AI Response Error.' }, { quoted: msg });
+            return;
+        }
+
+        // 5. Custom Persona Logic (API එකෙන් එන උත්තරේ පොඩ්ඩක් වෙනස් කරනවා)
+        // කවුරුහරි "Who made you" ඇහුවොත් අර API එකෙන් එන උත්තරේ අයින් කරලා අපේ එක දානවා.
+        let finalReply = aiReply;
+        if (q.toLowerCase().includes('who created you') || q.toLowerCase().includes('හැදුවේ කවුද')) {
+            finalReply = "මාව හැදුවේ නිපුන් අයියා.";
+        }
+
+        // 6. Final Message
+        await socket.sendMessage(sender, {
+            text: finalReply,
+            contextInfo: {
+                externalAdReply: {
+                    title: `${botName} Assistant`,
+                    body: "Powered By ${botName} 🎀",
+                    thumbnailUrl: "https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg", // කැමති ෆොටෝ එකක් දාගන්න
+                    mediaType: 1,
+                    sourceUrl: "https://chatgpt.com/",
+                    renderLargerThumbnail: false
+                }
+            }
+        }, { quoted: msg });
+
+    } catch (err) {
+        console.error("AI Error:", err);
+        await socket.sendMessage(sender, { text: '❌ AI සර්වර් එකේ පොඩි අවුලක්. ටිකකින් බලන්න.' });
+    }
+    break;
+}
+	  
+case 'aiimg':
+case 'aiimg2': {
+    const axios = require('axios');
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Sleep function එක
+
+    // 1. Text එක ගන්න විදිය
+    const text = msg.message?.conversation || 
+                 msg.message?.extendedTextMessage?.text || 
+                 msg.message?.imageMessage?.caption || 
+                 msg.message?.videoMessage?.caption || '';
+
+    // Command එක අයින් කරලා prompt එක විතරක් ගන්නවා
+    const prompt = text.replace(/^[.\/!](aiimg|aiimg2)\s*/i, '').trim();
+
+    if (!prompt) {
+        return await socket.sendMessage(sender, {
+            text: '🎨 *Please provide a prompt.* (Example: .aiimg cat)'
+        }, { quoted: msg });
+    }
+
+    try {
+        // 2. Load Bot Name
+        const sanitized = (number || '').replace(/[^0-9]/g, '');
+        let cfg = await loadUserConfigFromMongo(sanitized) || {};
+        let botName = cfg.botName || 'Dtec AI';
+
+        // 3. START PROCESSING MESSAGE (මේක තමයි edit වෙවී යන්නේ)
+        // මුලින්ම මැසේජ් එක යවනවා, ඊට පස්සේ ඒකේ key එක save කරගන්නවා
+        let { key } = await socket.sendMessage(sender, { text: "🖌️ *Initializing AI Engine...*" }, { quoted: msg });
+
+        // --- Fake Loading Animation ---
+        await sleep(500);
+        await socket.sendMessage(sender, { text: "🎨 *Generating Image... 20%*", edit: key });
+        
+        await sleep(1000);
+        await socket.sendMessage(sender, { text: "🎨 *Generating Image... 60%*", edit: key });
+
+        // 4. Determine API URL
+        // ඔයා දීපු API දෙකම මෙතනට සෙට් කළා
+        let apiUrl = '';
+        if (text.toLowerCase().includes('aiimg2')) {
+            apiUrl = `https://api.siputzx.my.id/api/ai/magicstudio?prompt=${encodeURIComponent(prompt)}`;
+        } else {
+            apiUrl = `https://api.siputzx.my.id/api/ai/flux?prompt=${encodeURIComponent(prompt)}`;
+        }
+
+        // 5. Call AI API
+        const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+
+        await socket.sendMessage(sender, { text: "🎨 *Uploading Image... 100%*", edit: key });
+
+        if (!response || !response.data) {
+             await socket.sendMessage(sender, { text: "❌ *Generation Failed!*", edit: key });
+             return;
+        }
+
+        const imageBuffer = Buffer.from(response.data, 'binary');
+
+        // 6. Send Final Image
+        await socket.sendMessage(sender, {
+            image: imageBuffer,
+            caption: `🎨 *AI GENERATED IMAGE*\n\n🖌️ *Prompt:* ${prompt}\n\n> 🤖 Generated by ${botName}`,
+            // ලස්සනට පේන්න Context Info (External Ad) එකක් දාමු
+            contextInfo: {
+                externalAdReply: {
+                    title: `${botName} Image Generator`,
+                    body: "Artificial Intelligence",
+                    thumbnailUrl: "https://telegra.ph/file/a754b2d5f3080d85a538d.jpg", // මෙතනට කැමති ලින්ක් එකක් දාන්න
+                    mediaType: 1,
+                    renderLargerThumbnail: true
+                }
+            }
+        }, { quoted: msg });
+
+        // 7. Finish the Loading Message
+        // වැඩේ ඉවර වුනාම අර උඩින් වැටුනු මැසේජ් එක Successful කියලා වෙනස් කරනවා
+        await socket.sendMessage(sender, { text: "✅ *Image Generated Successfully!*", edit: key });
+
+    } catch (err) {
+        console.error('AI Image Error:', err);
+        // Error එකක් ආවොත් Loading මැසේජ් එක Error එකක් විදියට වෙනස් කරනවා
+        await socket.sendMessage(sender, { text: `❌ *Error:* ${err.message}`, edit: key });
+    }
+    break;
+}
+
+// ==========================================
+
+case 'xnx1x':
+case 'xnxxv1ideo': {
   try {
     const sanitized = (number || '').replace(/[^0-9]/g, '');
     const userCfg = await loadUserConfigFromMongo(sanitized) || {};
