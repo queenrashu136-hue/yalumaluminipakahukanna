@@ -4199,7 +4199,7 @@ case 'list': {
   await socket.sendMessage(sender, { react: { text: '📜', key: msg.key } });
 
   try {
-    // 2. Get basic info & Configs (Setting එකේ වගේම)
+    // 2. Get basic info & Configs
     const sanitized = (number || '').replace(/[^0-9]/g, '');
     const currentConfig = await loadUserConfigFromMongo(sanitized) || {};
     const botName = currentConfig.botName || config.BOT_NAME || 'MY BOT';
@@ -4207,10 +4207,10 @@ case 'list': {
     const ownerNum = config.OWNER_NUMBER;
 
     // Time & Date setup
-    const date = new Date().toLocaleDateString('si-LK'); // Sri Lanka Date
-    const time = new Date().toLocaleTimeString('si-LK'); // Sri Lanka Time
+    const date = new Date().toLocaleDateString('si-LK');
+    const time = new Date().toLocaleTimeString('si-LK');
 
-    // 3. මෙනු එකේ ලිස්ට් එක (Sections විදියට Commands වෙන් කරලා)
+    // 3. Menu sections
     const sections = [
       {
         title: "📥 DOWNLOADER",
@@ -4240,7 +4240,7 @@ case 'list': {
       }
     ];
 
-    // 4. Menu එකේ උඩින් පෙන්නන විස්තරය (Header Text)
+    // 4. Header text
     const text = `
 ╭───「 🤖 *${botName} MENU* 」
 │
@@ -4253,16 +4253,16 @@ case 'list': {
 │ 👇 *Click "OPEN MENU" to see commands*
 ╰────────────────────●
 `;
- const menuimg = "https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg";
-    // 5. List Message එක යැවීම
+
+    // 5. Prepare list message with header image
     const listMessage = {
-      text: text,
-      image:{url:menuimg},
+      image: { url: 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg' }, // Logo එක
+      caption: text,
       footer: `🔥 POWERED BY ${botName} 🔥`,
       title: "Main Command List",
-      buttonText: "📜 OPEN MENU", // බටන් එකේ නම
+      buttonText: "📜 OPEN MENU",
       sections,
-      mentions: [sender] // මෙන්ශන් එක වැඩ කරන්න දාන්න ඕන
+      mentions: [sender]
     };
 
     await socket.sendMessage(sender, listMessage, { quoted: msg });
