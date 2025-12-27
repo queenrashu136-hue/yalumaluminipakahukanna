@@ -4195,40 +4195,30 @@ const { proto } = require('@whiskeysockets/baileys');
 case 'menu':
 case 'panel':
 case 'list': {
-  // 1. React to the command
   await socket.sendMessage(sender, { react: { text: '📜', key: msg.key } });
 
   try {
-    // 2. Get basic info & Configs
     const sanitized = (number || '').replace(/[^0-9]/g, '');
     const currentConfig = await loadUserConfigFromMongo(sanitized) || {};
     const botName = currentConfig.botName || config.BOT_NAME || 'MY BOT';
     const prefix = currentConfig.PREFIX || config.PREFIX || '.';
     const ownerNum = config.OWNER_NUMBER;
 
-    // Time & Date setup
     const date = new Date().toLocaleDateString('si-LK');
     const time = new Date().toLocaleTimeString('si-LK');
 
-    // 3. Menu sections
     const sections = [
       {
         title: "📥 DOWNLOADER",
-        rows: [
-          { title: "Download Menu", rowId: `${prefix}download`, description: "Download Menu" }
-        ]
+        rows: [{ title: "Download Menu", rowId: `${prefix}download`, description: "Download Menu" }]
       },
       {
         title: "Creative Menu",
-        rows: [
-          { title: "Creative Main Menu", rowId: `${prefix}creative`, description: "Creative Menu" }
-        ]
+        rows: [{ title: "Creative Main Menu", rowId: `${prefix}creative`, description: "Creative Menu" }]
       },
       {
         title: "🛠️ TOOLS & EXTRAS",
-        rows: [
-          { title: "Tool Menu", rowId: `${prefix}tools`, description: "Dtec Tool Menu" }
-        ]
+        rows: [{ title: "Tool Menu", rowId: `${prefix}tools`, description: "Dtec Tool Menu" }]
       },
       {
         title: "⚙️ SETTINGS & OWNER",
@@ -4240,24 +4230,20 @@ case 'list': {
       }
     ];
 
-    // 4. Header text
-    const text = `
+    const listMessage = {
+      image: { url: 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg' },
+      caption: `
 ╭───「 🤖 *${botName} MENU* 」
 │
-│ 👋 *Hi,* @${sender.split('@')[0]}
-│ 📅 *Date:* ${date}
-│ ⌚ *Time:* ${time}
-│ 🧩 *Prefix:* [ ${prefix} ]
-│ 👑 *Owner:* ${ownerNum}
+│ 👋 Hi @${sender.split('@')[0]}
+│ 📅 Date: ${date}
+│ ⌚ Time: ${time}
+│ 🧩 Prefix: [ ${prefix} ]
+│ 👑 Owner: ${ownerNum}
 │
-│ 👇 *Click "OPEN MENU" to see commands*
+│ 👇 Click the button below to see commands
 ╰────────────────────●
-`;
-
-    // 5. Prepare list message with header image
-    const listMessage = {
-      image: { url: 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg' }, // Logo එක
-      caption: text,
+`,
       footer: `🔥 POWERED BY ${botName} 🔥`,
       title: "Main Command List",
       buttonText: "📜 OPEN MENU",
