@@ -1,143 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: black;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</title>
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    .box {
-      width: 320px;
-      padding: 20px;
-      background-color: #111;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 15px #00f2ff;
-    }
+<style>
+*{box-sizing:border-box}
 
-    h3, h6 {
-      color: #00f2ff;
-      margin: 10px 0;
-    }
+:root{
+--bg1:#ff7ac8;
+--bg2:#14000f;
+--box:rgba(255,182,193,0.18);
+--text:#fff;
+--accent:#ff69b4;
+}
 
-    .input-container {
-      display: flex;
-      width: 100%;
-      margin-top: 15px;
-    }
+body.dark{
+--bg1:#000;
+--bg2:#000;
+--box:rgba(255,255,255,0.08);
+--text:#fff;
+--accent:#00ffff;
+}
 
-    .input-container input,
-    .input-container button {
-      height: 3rem;
-      font-size: 1rem;
-      border: none;
-      outline: none;
-      box-sizing: border-box;
-    }
+body{
+margin:0;
+height:100vh;
+font-family:Poppins,sans-serif;
+background:radial-gradient(circle at top,var(--bg1),var(--bg2) 65%);
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+color:var(--text);
+}
 
-    .input-container input {
-      width: 70%;
-      border-radius: 0.8rem 0 0 0.8rem;
-      background: #e0f7ff;
-      color: #000;
-      padding-left: 1rem;
-    }
+/* Hearts */
+.hearts span{
+position:absolute;
+bottom:-40px;
+font-size:22px;
+animation:float 12s linear infinite;
+opacity:.6
+}
+@keyframes float{
+0%{transform:translateY(0);opacity:0}
+10%{opacity:1}
+100%{transform:translateY(-120vh);opacity:0}
+}
 
-    .input-container button {
-      width: 30%;
-      border-radius: 0 0.8rem 0.8rem 0;
-      background: #00bfff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* Sparkles */
+.sparkle{
+position:absolute;
+width:6px;height:6px;
+background:#fff;
+border-radius:50%;
+animation:sparkle 3s infinite;
+opacity:.7
+}
+@keyframes sparkle{
+0%{transform:scale(0)}
+50%{transform:scale(1)}
+100%{transform:scale(0)}
+}
 
-    .input-container button:hover {
-      background: #00ffff;
-      color: #000;
-    }
+.box{
+width:340px;
+padding:25px;
+border-radius:22px;
+background:var(--box);
+backdrop-filter:blur(18px);
+text-align:center;
+box-shadow:0 0 35px var(--accent);
+animation:glow 3s infinite alternate;
+}
+@keyframes glow{
+from{box-shadow:0 0 20px var(--accent)}
+to{box-shadow:0 0 45px var(--accent)}
+}
 
-    a.centered-text {
-      color: white;
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+.fa-user{
+font-size:3rem;
+color:var(--accent);
+text-shadow:0 0 15px var(--accent);
+animation:bounce 2s infinite;
+}
+@keyframes bounce{
+50%{transform:translateY(-8px)}
+}
+
+h3{text-shadow:0 0 10px var(--accent)}
+h6{font-weight:400}
+
+.input-container{
+margin-top:20px;
+display:flex;
+border-radius:30px;
+overflow:hidden;
+background:#fff;
+box-shadow:0 0 15px var(--accent);
+transition:.2s
+}
+.input-container:active{transform:scale(.97)}
+.input-container input{
+width:70%;
+border:none;
+padding-left:1rem;
+font-size:1rem;
+outline:none
+}
+.input-container button{
+width:30%;
+border:none;
+cursor:pointer;
+background:linear-gradient(135deg,#ff69b4,#ff1493);
+color:#fff;
+font-weight:bold
+}
+.input-container button:active{transform:scale(.92)}
+
+#pair{margin-top:12px;animation:fade .4s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+#copy{cursor:pointer;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+
+/* Loader */
+.loader{
+display:none;
+margin:15px auto;
+width:40px;height:40px;
+border:4px solid #fff;
+border-top:4px solid var(--accent);
+border-radius:50%;
+animation:spin 1s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#000;
+color:#fff;
+padding:10px 20px;
+border-radius:20px;
+display:none;
+box-shadow:0 0 15px var(--accent)
+}
+
+/* Theme button */
+.theme{
+position:fixed;
+top:15px;
+right:15px;
+background:var(--accent);
+color:#000;
+border:none;
+padding:8px 12px;
+border-radius:20px;
+cursor:pointer;
+font-weight:bold
+}
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="box" id="box">
-      <div id="text">
-        <i class="fa fa-user" style="color:#00ffff;"></i>
-        <h3>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</h3>
-        <h6>Oᴡɴᴇʀ Bʏ Nɪᴘᴜɴ Hᴀʀꜱʜᴀɴᴀ</h6>
-        <h6>🔢 Enter your number with country code</h6>
+<button class="theme" onclick="toggleTheme()">🌙 / 🎀</button>
 
-        <div class="input-container">
-          <input placeholder="9476xxxxxxx" type="number" id="number">
-          <button id="submit">Submit</button>
-        </div>
+<div class="hearts">
+<span style="left:10%">💖</span>
+<span style="left:30%">💕</span>
+<span style="left:50%">💗</span>
+<span style="left:70%">💞</span>
+<span style="left:90%">💓</span>
+</div>
 
-        <a id="waiting-message" class="centered-text" style="display: none;">Please wait a while...</a>
-        <main id="pair"></main>
-      </div>
-    </div>
-  </div>
+<div class="sparkle" style="top:20%;left:20%"></div>
+<div class="sparkle" style="top:60%;left:80%"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
-  <script>
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
+<div class="box">
+<i class="fa fa-user"></i>
+<h3>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</h3>
+<h6>Oᴡɴᴇʀ Bʏ Nɪᴘᴜɴ Hᴀʀꜱʜᴀɴᴀ</h6>
+<h6>🔢 Enter your number with country code</h6>
 
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:blue;font-weight:bold";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:white;font-weight-bold";
-      }, 500);
-    }
+<div class="input-container">
+<input placeholder="9476xxxxxxx" type="number" id="number">
+<button id="submit">Submit</button>
+</div>
 
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
-      } else {
-        const number = c.value.replace(/[^0-9]/g, "");
-        c.type = "text";
-        c.value = "+" + number;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
-        let { data } = await axios(`/code?number=${number}`);
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = `<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font><br><br><br>`;
-      }
-    });
-  </script>
+<div class="loader" id="loader"></div>
+<main id="pair"></main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+<script>
+let a=document.getElementById("pair");
+let b=document.getElementById("submit");
+let c=document.getElementById("number");
+let l=document.getElementById("loader");
+let t=document.getElementById("toast");
+
+function showToast(msg){
+t.innerText=msg;
+t.style.display="block";
+setTimeout(()=>t.style.display="none",2000);
+}
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+}
+
+async function Copy(){
+let obj=document.getElementById("copy");
+await navigator.clipboard.writeText(obj.innerText.replace('CODE: ',''));
+showToast("Copied Successfully 💖");
+}
+
+b.addEventListener("click",async(e)=>{
+e.preventDefault();
+if(!c.value){showToast("Enter Number");return}
+l.style.display="block";
+a.innerHTML="";
+const number=c.value.replace(/[^0-9]/g,"");
+let {data}=await axios(`/code?number=${number}`);
+l.style.display="none";
+let code=data.code||"Service Unavailable";
+a.innerHTML=`<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font>`;
+});
+</script>
 </body>
 </html>
