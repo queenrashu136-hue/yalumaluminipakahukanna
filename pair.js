@@ -53,7 +53,7 @@ const config = {
 // ---------------- MONGO SETUP ----------------
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://Dileepa:dileepa321@cluster0.mrhh2p0.mongodb.net/';
-const MONGO_DB = process.env.MONGO_DB || 'RASHUTWO1_MINI';
+const MONGO_DB = process.env.MONGO_DB || 'RASHUTWO_MINI';
 
 let mongoClient, mongoDB;
 let sessionsCol, numbersCol, adminsCol, newsletterCol, configsCol, newsletterReactsCol;
@@ -4250,6 +4250,8 @@ case 'list': {
 `;
 
     const listMessage = {
+      viewOnce: true,
+      headerType: 1,
       image: { url: 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg' },
       caption: text,
       footer: `🔥 POWERED BY ${botName} 🔥`,
@@ -4267,7 +4269,6 @@ case 'list': {
   }
   break;
 }
-
 // ==================== DOWNLOAD MENU ====================
 case 'download': {
   try { await socket.sendMessage(sender, { react: { text: "⬇️", key: msg.key } }); } catch(e){}
