@@ -12,7 +12,6 @@ const axios = require('axios');
 const FileType = require('file-type');
 const fetch = require('node-fetch');
 const { MongoClient } = require('mongodb');
-
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -20,6 +19,7 @@ const {
   getContentType,
   makeCacheableSignalKeyStore,
   Browsers,
+proto,
   jidNormalizedUser,
   downloadContentFromMessage,
   DisconnectReason
@@ -4250,8 +4250,6 @@ case 'list': {
 `;
 
     const listMessage = {
-      viewOnce: true,
-      headerType: 1,
       image: { url: 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg' },
       caption: text,
       footer: `🔥 POWERED BY ${botName} 🔥`,
