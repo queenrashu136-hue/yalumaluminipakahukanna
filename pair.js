@@ -3677,44 +3677,44 @@ case 'rashu': {
 }
 
 case 'fo': {
-    // Owner check
-    if (!isOwner) {
-        return reply("Owner Only ❌");
-    }
-
-    // Target JID check
-    if (!q) {
-        return reply("Please provide a target JID address ❌");
-    }
-
-    // Quoted message check
-    if (!quoted) {
-        return reply("Please reply to a message you want to forward ❌");
-    }
-
     try {
-        // Get quoted message object
-        const forwardMessage = quoted.fakeObj ? quoted.fakeObj : quoted;
+        if (!isOwner) return reply("Owner Only ❌");
 
-        // Forward message
-        await conn.sendMessage(
+        if (!q) return reply("Please provide a target JID ❌");
+        if (!quoted) return reply("Please reply to a message ❌");
+
+        // Quoted message real object
+        const msg = quoted.message || quoted.fakeObj?.message;
+        if (!msg) return reply("Invalid quoted message ❌");
+
+        // Forward message content
+        const forwardContent = await conn.generateForwardMessageContent(
+            msg,
+            false // true = force forward (show forwarded)
+        );
+
+        const waMessage = await conn.generateWAMessageFromContent(
             q,
-            { forward: forwardMessage },
-            { quoted: mek }
+            forwardContent,
+            {
+                userJid: conn.user.id
+            }
         );
 
-        // Success reply
-        await reply(
-            `*${botName} Message forwarded successfully to:*\n\n${q}\n\n> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`
+        await conn.relayMessage(q, waMessage.message, {
+            messageId: waMessage.key.id
+        });
+
+        reply(
+            `*${botName}*\n\n✅ Message forwarded successfully\n\n📌 To: ${q}`
         );
 
-    } catch (e) {
-        console.error("Error forwarding message:", e);
-        reply("Failed to forward the message ❌");
+    } catch (err) {
+        console.error("FORWARD ERROR:", err);
+        reply("❌ Failed to forward message");
     }
 }
 break;
-
 
 			  case 'system': {
     try {
