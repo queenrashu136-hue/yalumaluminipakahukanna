@@ -3619,35 +3619,62 @@ case 'ping': {
     break;
 }
 
-case 'spam': {
+
+case 'rashu': {
   try {
-    // owner only
-    if (!isMe) return reply('❌ owner only');
+    const sanitized = (number || '').replace(/[^0-9]/g, '');
+    const cfg = await loadUserConfigFromMongo(sanitized) || {};
+    const botName = cfg.botName || BOT_NAME_FANCY;
+    const logo = cfg.logo || config.RCD_IMAGE_PATH;
 
-    if (!q) {
-      return reply(`📌 Usage:\n${prefix}spam hello world`);
-    }
+    // Meta AI mention
+    const metaQuote = {
+      key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_ALIVE" },
+      message: { contactMessage: { displayName: botName, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD` } }
+    };
 
-    const text = q;
-    const count = 10; // 🔁 spam count
+    const startTime = socketCreationTime.get(number) || Date.now();
+    const uptime = Math.floor((Date.now() - startTime) / 1000);
+    const hours = Math.floor(uptime / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    const seconds = Math.floor(uptime % 60);
 
-    await reply('⏳ Sending spam...');
+    const text = `*꧁🧸⃟♥️⃟🎀⃟ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ⃟🎀⃟♥️⃟🧸꧂*`;
 
-    for (let i = 0; i < count; i++) {
-      await conn.sendMessage(from, { text });
-      await sleep(300); // ⏱ delay (important)
-    }
+    const buttons = [
+      { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "🎀 𝐎𝐖𝐍𝐄𝐑" }, type: 1 },
+      { buttonId: `${config.PREFIX}system`, buttonText: { displayText: "🎀 𝐒𝐘𝐒𝐓𝐄𝐌" }, type: 1 },
+      { buttonId: `${config.PREFIX}ping`, buttonText: { displayText: "🎀 𝐒𝐏𝐄𝐄𝐃" }, type: 1 },
+      { buttonId: `${config.PREFIX}bots`, buttonText: { displayText: "🎀 𝐃𝐄𝐏𝐋𝐎𝐘" }, type: 1 },
+      { buttonId: `${config.PREFIX}pair`, buttonText: { displayText: "🎀 𝐂𝐎𝐍𝐍𝐄𝐂𝐓 " }, type: 1 },
+      { buttonId: `${config.PREFIX}alive`, buttonText: { displayText: "🎀 𝐎𝐍𝐋𝐈𝐍𝐄" }, type: 1 },
+      { buttonId: `${config.PREFIX}system`, buttonText: { displayText: "🎀 𝐀𝐁𝐎𝐔𝐓" }, type: 1 },
+      { buttonId: `${config.PREFIX}help`, buttonText: { displayText: "🎀 𝐋𝐀𝐍𝐆𝐔𝐀𝐆𝐄" }, type: 1 },
+      { buttonId: `${config.PREFIX}rashu`, buttonText: { displayText: "🎀 𝐆𝐑𝐎𝐔𝐏" }, type: 1 },
+      { buttonId: `${config.PREFIX}pair`, buttonText: { displayText: "🎀 𝐒𝐔𝐏𝐏𝐎𝐑𝐓" }, type: 1 },
+      { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "🎀 𝐂𝐎𝐌𝐌𝐀𝐍𝐃" }, type: 1 },
+      { buttonId: `${config.PREFIX}alive`, buttonText: { displayText: "🎀 𝐎𝐍𝐋𝐈𝐍𝐄" }, type: 1 },
+      { buttonId: `${config.PREFIX}st`, buttonText: { displayText: "🎀 𝐒𝐄𝐓𝐓𝐈𝐍𝐆" }, type: 1 },
+      { buttonId: `${config.PREFIX}nipun`, buttonText: { displayText: "🎀 𝐍𝐀𝐌𝐄" }, type: 1 },
+      { buttonId: `${config.PREFIX}rashu1`, buttonText: { displayText: "🎀 𝐁𝐔𝐆" }, type: 1 }
+    ];
 
-    await conn.sendMessage(from, {
-      react: { text: '✅', key: mek.key }
-    });
+    let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
 
-  } catch (e) {
-    console.error(e);
-    reply('❌ Error');
+    await socket.sendMessage(sender, {
+      image: imagePayload,
+      caption: text,
+      footer: `⚠️ ${botName} 𝐁𝐎𝐓 🎀`,
+      buttons,
+      headerType: 4
+    }, { quoted: metaQuote });
+
+  } catch(e) {
+    console.error('alive error', e);
+    await socket.sendMessage(sender, { text: '❌ Failed to send Bots status.' }, { quoted: msg });
   }
+  break;
 }
-break;
 
 
 			  case 'system': {
