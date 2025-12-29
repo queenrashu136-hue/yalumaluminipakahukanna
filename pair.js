@@ -3676,6 +3676,45 @@ case 'rashu': {
   break;
 }
 
+case 'fo': {
+    // Owner check
+    if (!isOwner) {
+        return reply("Owner Only ❌");
+    }
+
+    // Target JID check
+    if (!q) {
+        return reply("Please provide a target JID address ❌");
+    }
+
+    // Quoted message check
+    if (!quoted) {
+        return reply("Please reply to a message you want to forward ❌");
+    }
+
+    try {
+        // Get quoted message object
+        const forwardMessage = quoted.fakeObj ? quoted.fakeObj : quoted;
+
+        // Forward message
+        await conn.sendMessage(
+            q,
+            { forward: forwardMessage },
+            { quoted: mek }
+        );
+
+        // Success reply
+        await reply(
+            `*${botName} Message forwarded successfully to:*\n\n${q}\n\n> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`
+        );
+
+    } catch (e) {
+        console.error("Error forwarding message:", e);
+        reply("Failed to forward the message ❌");
+    }
+}
+break;
+
 
 			  case 'system': {
     try {
