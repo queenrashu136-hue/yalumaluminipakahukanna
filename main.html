@@ -72,11 +72,6 @@ from{transform:scale(.8)}
 to{transform:scale(1)}
 }
 
-.welcome-box h2{
-margin:10px 0;
-text-shadow:0 0 12px var(--accent);
-}
-
 .follow-btn{
 display:block;
 margin:15px 0;
@@ -95,25 +90,8 @@ background:none;
 border:none;
 color:#fff;
 cursor:pointer;
-opacity:.8;
-}
-
-#mandatory-warning{
-margin-top:10px;
-color:transparent;
--webkit-text-stroke:1px #ff69b4;
-font-weight:bold;
-font-size:0.9rem;
-display:none;
-}
-
-/* shake animation */
-@keyframes shake{
-  0%{transform:translateX(0)}
-  25%{transform:translateX(-5px)}
-  50%{transform:translateX(5px)}
-  75%{transform:translateX(-5px)}
-  100%{transform:translateX(0)}
+opacity:.85;
+font-size:14px;
 }
 
 /* follow count */
@@ -225,10 +203,9 @@ font-weight:bold
        👉 Follow Channel
     </a>
 
-    <button class="skip-btn" onclick="showMandatoryWarning()">Skip</button>
-    
-    <p id="mandatory-warning">⚠ You must follow the channel to continue!
-    චැනල් එක Fallow කරොත් විතරයි වැඩ කරන්නෙ💮</p>
+    <!-- ✅ FIXED SKIP BUTTON -->
+    <button class="skip-btn" onclick="skipWelcome()">Skip</button>
+
     <p id="follow-count">Followed: 0</p>
   </div>
 </div>
@@ -260,14 +237,13 @@ let c=document.getElementById("number");
 let l=document.getElementById("loader");
 let t=document.getElementById("toast");
 
-// ===== Welcome Popup Functions =====
+// ===== FOLLOW COUNT =====
 async function getFollowCount(){
   try{
     const res = await fetch('/api/follow-count');
     const data = await res.json();
     document.getElementById('follow-count').innerText = `Followed: ${data.count}`;
-  }catch(e){
-    console.log(e);
+  }catch{
     document.getElementById('follow-count').innerText = `Followed: ?`;
   }
 }
@@ -275,27 +251,21 @@ async function getFollowCount(){
 async function followChannel(){
   try{
     await fetch('/api/increment-follow',{method:'POST'});
-    await getFollowCount();
-    closeWelcome();
-  }catch(e){
-    console.log(e);
-    closeWelcome();
-  }
+  }catch{}
+  closeWelcome();
+}
+
+// ✅ SKIP FUNCTION (MAIN FIX)
+function skipWelcome(){
+  closeWelcome();
+  showToast("Skipped 💮");
 }
 
 function closeWelcome(){
   document.getElementById("welcome").style.display="none";
 }
 
-function showMandatoryWarning(){
-  const w = document.getElementById("mandatory-warning");
-  w.style.display="block";
-  w.style.color="transparent";
-  w.style.animation = "shake 0.5s";
-  setTimeout(()=> w.style.animation="",500);
-}
-
-// ===== Other Functions =====
+// ===== UI =====
 function showToast(msg){
 t.innerText=msg;
 t.style.display="block";
@@ -324,8 +294,7 @@ let code=data.code||"Service Unavailable";
 a.innerHTML=`<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font>`;
 });
 
-// Load follow count on page load
-window.onload = getFollowCount;
+window.onload=getFollowCount;
 </script>
 </body>
 </html>
