@@ -39,6 +39,54 @@ overflow:hidden;
 color:var(--text);
 }
 
+/* ☰ HAMBURGER */
+.hamburger{
+position:fixed;
+top:18px;
+left:18px;
+font-size:26px;
+color:var(--accent);
+cursor:pointer;
+z-index:10001;
+text-shadow:0 0 10px var(--accent);
+}
+
+/* SIDE MENU */
+.side-menu{
+position:fixed;
+top:0;
+left:-260px;
+width:260px;
+height:100%;
+background:rgba(0,0,0,.85);
+backdrop-filter:blur(10px);
+padding:25px;
+transition:.4s;
+z-index:10000;
+}
+
+.side-menu.active{left:0}
+
+.side-menu h3{
+color:var(--accent);
+margin-bottom:25px;
+text-align:center;
+}
+
+.side-menu a{
+display:block;
+padding:14px;
+margin-bottom:12px;
+border-radius:12px;
+text-decoration:none;
+color:#fff;
+background:rgba(255,255,255,.1);
+transition:.3s;
+}
+
+.side-menu a i{margin-right:10px;color:var(--accent)}
+.side-menu a:hover{background:var(--accent);color:#000}
+
 /* ===== WELCOME POPUP ===== */
 .welcome-overlay{
 position:fixed;
@@ -49,12 +97,6 @@ display:flex;
 justify-content:center;
 align-items:center;
 z-index:9999;
-animation:fadeIn .6s;
-}
-
-@keyframes fadeIn{
-from{opacity:0}
-to{opacity:1}
 }
 
 .welcome-box{
@@ -64,12 +106,6 @@ border-radius:25px;
 background:var(--box);
 text-align:center;
 box-shadow:0 0 35px var(--accent);
-animation:pop .6s;
-}
-
-@keyframes pop{
-from{transform:scale(.8)}
-to{transform:scale(1)}
 }
 
 .follow-btn{
@@ -81,7 +117,6 @@ background:linear-gradient(135deg,#ff69b4,#ff1493);
 color:#fff;
 font-weight:bold;
 text-decoration:none;
-box-shadow:0 0 15px var(--accent);
 }
 
 .skip-btn{
@@ -90,15 +125,6 @@ background:none;
 border:none;
 color:#fff;
 cursor:pointer;
-opacity:.85;
-font-size:14px;
-}
-
-/* follow count */
-#follow-count{
-margin-top:10px;
-color:#ff69b4;
-font-weight:bold;
 }
 
 /* ===== MAIN BOX ===== */
@@ -110,20 +136,7 @@ background:var(--box);
 backdrop-filter:blur(18px);
 text-align:center;
 box-shadow:0 0 35px var(--accent);
-animation:glow 3s infinite alternate;
 }
-@keyframes glow{
-from{box-shadow:0 0 20px var(--accent)}
-to{box-shadow:0 0 45px var(--accent)}
-}
-
-.fa-user{
-font-size:3rem;
-color:var(--accent);
-text-shadow:0 0 15px var(--accent);
-animation:bounce 2s infinite;
-}
-@keyframes bounce{50%{transform:translateY(-8px)}}
 
 .input-container{
 margin-top:20px;
@@ -131,8 +144,8 @@ display:flex;
 border-radius:30px;
 overflow:hidden;
 background:#fff;
-box-shadow:0 0 15px var(--accent);
 }
+
 .input-container input{
 width:70%;
 border:none;
@@ -170,7 +183,6 @@ color:#fff;
 padding:10px 20px;
 border-radius:20px;
 display:none;
-box-shadow:0 0 15px var(--accent)
 }
 
 .theme{
@@ -178,45 +190,49 @@ position:fixed;
 top:15px;
 right:15px;
 background:var(--accent);
-color:#000;
 border:none;
 padding:8px 12px;
 border-radius:20px;
 cursor:pointer;
-font-weight:bold
 }
 </style>
 </head>
 <body>
 
-<!-- 🌸 WELCOME POPUP -->
-<div class="welcome-overlay" id="welcome">
-  <div class="welcome-box">
-    <i class="fas fa-heart" style="font-size:2.5rem;color:var(--accent)"></i>
-    <h2>Welcome 💖</h2>
-    <p>Follow our WhatsApp Channel to continue</p>
+<!-- ☰ HAMBURGER -->
+<i class="fas fa-bars hamburger" onclick="toggleMenu()"></i>
 
-    <a class="follow-btn" 
-       href="https://whatsapp.com/channel/0029Vb7RfVJ0AgWJdoW3Z12f" 
-       target="_blank"
-       onclick="followChannel()">
-       👉 Follow Channel
-    </a>
-
-    <!-- ✅ FIXED SKIP BUTTON -->
-    <button class="skip-btn" onclick="skipWelcome()">Skip</button>
-
-    <p id="follow-count">Followed: 0</p>
-  </div>
+<!-- SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+<h3>🌸 MENU</h3>
+<a href="https://wa.me/94764085107" onclick="closeMenu()">
+<i class="fas fa-user"></i> Contact
+</a>
+<a href="https://chat.whatsapp.com/Jumzn66rDOx9UHSs9z4qIL?mode=hqrt2" onclick="closeMenu()">
+<i class="fas fa-users"></i> Group
+</a>
+<a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" onclick="closeMenu()">
+<i class="fab fa-whatsapp"></i> WhatsApp Channel
+</a>
+<a href="https://www.youtube.com/@rashumodz_0715" onclick="closeMenu()">
+<i class="fab fa-youtube"></i> YouTube
+</a>
 </div>
 
-<button class="theme" onclick="toggleTheme()">🌙 / 🎀</button>
+<!-- WELCOME -->
+<div class="welcome-overlay" id="welcome">
+<div class="welcome-box">
+<h2>Welcome 💖</h2>
+<a class="follow-btn" href="https://whatsapp.com/channel/0029Vb7RfVJ0AgWJdoW3Z12f" target="_blank">Follow Channel</a>
+<button class="skip-btn" onclick="closeWelcome()">Skip</button>
+</div>
+</div>
+
+<button class="theme" onclick="toggleTheme()">🌙</button>
 
 <div class="box">
-<i class="fa fa-user"></i>
 <h3>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</h3>
-<h6>Oᴡɴᴇʀ Bʏ Nɪᴘᴜɴ Hᴀʀꜱʜᴀɴᴀ</h6>
-<h6>🔢 Enter your number with country code</h6>
+<h6>Enter your number</h6>
 
 <div class="input-container">
 <input placeholder="9476xxxxxxx" type="number" id="number">
@@ -231,70 +247,19 @@ font-weight:bold
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
 <script>
-let a=document.getElementById("pair");
-let b=document.getElementById("submit");
-let c=document.getElementById("number");
-let l=document.getElementById("loader");
-let t=document.getElementById("toast");
-
-// ===== FOLLOW COUNT =====
-async function getFollowCount(){
-  try{
-    const res = await fetch('/api/follow-count');
-    const data = await res.json();
-    document.getElementById('follow-count').innerText = `Followed: ${data.count}`;
-  }catch{
-    document.getElementById('follow-count').innerText = `Followed: ?`;
-  }
+function toggleMenu(){
+document.getElementById("sideMenu").classList.toggle("active");
 }
-
-async function followChannel(){
-  try{
-    await fetch('/api/increment-follow',{method:'POST'});
-  }catch{}
-  closeWelcome();
+function closeMenu(){
+document.getElementById("sideMenu").classList.remove("active");
 }
-
-// ✅ SKIP FUNCTION (MAIN FIX)
-function skipWelcome(){
-  closeWelcome();
-  showToast("Skipped 💮");
-}
-
 function closeWelcome(){
-  document.getElementById("welcome").style.display="none";
+document.getElementById("welcome").style.display="none";
 }
-
-// ===== UI =====
-function showToast(msg){
-t.innerText=msg;
-t.style.display="block";
-setTimeout(()=>t.style.display="none",2000);
-}
-
 function toggleTheme(){
 document.body.classList.toggle("dark");
 }
-
-async function Copy(){
-let obj=document.getElementById("copy");
-await navigator.clipboard.writeText(obj.innerText.replace('CODE: ',''));
-showToast("Copied Successfully 💖");
-}
-
-b.addEventListener("click",async(e)=>{
-e.preventDefault();
-if(!c.value){showToast("Enter Number");return}
-l.style.display="block";
-a.innerHTML="";
-const number=c.value.replace(/[^0-9]/g,"");
-let {data}=await axios(`/code?number=${number}`);
-l.style.display="none";
-let code=data.code||"Service Unavailable";
-a.innerHTML=`<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font>`;
-});
-
-window.onload=getFollowCount;
 </script>
+
 </body>
 </html>
