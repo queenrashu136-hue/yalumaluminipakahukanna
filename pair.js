@@ -4283,6 +4283,210 @@ wa.me/94764085107
 }
 
 
+case 'menu20': {
+await socket.sendMessage(sender, { react: { text: '📍', key: msg.key } });
+    const date = new Date();
+    const slstDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Colombo" }));
+    const formattedDate = `${slstDate.getFullYear()}/${slstDate.getMonth() + 1}/${slstDate.getDate()}`;
+    const formattedTime = slstDate.toLocaleTimeString();
+    
+    const hour = slstDate.getHours();
+    const greetings = hour < 12 ? '*`සුභ උදෑසනක් 🌄`*' :
+                     hour < 17 ? '*`සුභ දහවලක් 🏞️`*' :
+                     hour < 20 ? '*`සුභ හැන්දෑවක් 🌅`*' : '*`සුභ රාත්‍රියක් 🌌`*';
+
+    const startTime = socketCreationTime.get(number) || Date.now();
+    const uptime = Math.floor((Date.now() - startTime) / 1000);
+    const hours = Math.floor(uptime / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    const seconds = Math.floor(uptime % 60);
+    const uptimeFormatted = `${hours}h ${minutes}m ${seconds}s`;
+
+    let teksnya = `_*Ｗᴇʟᴄᴏᴍᴇ Ｔᴏ Ｄᴛᴢ Ｍɪɴɪ Ｂᴏᴛ ☃️"*_
+*╭───────────────┈⊷*
+*┊• 🖼️ \`ɢʀᴇᴇᴛ\` :-* ${greetings}
+*┊• ⏰ \`ᴛɪᴍᴇ\` :-* *${formattedTime}*
+*┊• 📅 \`ᴅᴀᴛᴇ\` :-* *${formattedDate}*
+*┊• 🎭 \`ʙᴏᴛ ᴘᴏᴡᴇʀᴇᴅ\` :-* *ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ*
+*┊• 📍 \`ᴀᴄᴛɪᴠᴇ ꜱᴇꜱꜱɪᴏɴꜱ\` :-* *${activeSockets.size}*
+*╰───────────────┈⊷*
+
+*ʜᴇʟʟᴏ ʙʀᴏ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ☃️ , ᴀ ᴍᴜʟᴛɪ ᴅᴇᴠɪᴄᴇ ᴘᴏᴡᴇʀꜰᴜʟ ꜰʀᴇᴇ ʙᴏᴛ. ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ ᴛᴇᴀᴍ ( ᴅᴛᴢ ɢᴀɴɢ ).*📬
+
+*🌐 DTZ MINI BOT Website :*
+> ${config.PAIR}
+
+*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ*`;
+
+    let imageUrl = config.DTZ_MINI_BOT_IMAGE;
+
+    let vpsOptions = [
+        { title: "DOWNLOAD MENU", description: "© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ", id: `${config.PREFIX}downmenu` },
+        { title: "MAIN MENU", description: "© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ", id: `${config.PREFIX}mainmenu` },
+        { title: "FUN MENU", description: "© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ", id: `${config.PREFIX}funmenu` }
+    ];
+
+    let buttonSections = [
+        {
+            title: "ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ᴍᴇɴᴜ ᴄᴏᴍᴍᴀɴᴅꜱ",
+            highlight_label: "ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ᴠ2 💬",
+            rows: vpsOptions
+        }
+    ];
+
+    let buttons = [
+        {
+            buttonId: "action",
+            buttonText: { displayText: "Sᴇʟᴇᴄᴛ Mᴇɴᴜ" },
+            type: 4,
+            nativeFlowInfo: {
+                name: "single_select",
+                paramsJson: JSON.stringify({
+                    title: "CHOOSE MENU TAB",
+                    sections: buttonSections
+                })
+            }
+        },
+        {
+            buttonId: `${config.PREFIX}system`,
+            buttonText: { displayText: '© ꜱʏꜱᴛᴇᴍ ᴄᴍᴅ' },
+            type: 1
+        },
+        {
+            buttonId: `${config.PREFIX}alive`,
+            buttonText: { displayText: '© ᴀʟɪᴠᴇ ᴄᴍᴅ' },
+            type: 1
+        }
+    ];
+
+    await socket.sendMessage(sender, {
+        buttons,
+        headerType: 1,
+        viewOnce: true,
+        caption: teksnya,
+        image: { url: imageUrl },
+        contextInfo: {
+            mentionedJid: [sender], 
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363401720377971@newsletter',
+                newsletterName: 'ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ᴠ2 📌',
+                serverMessageId: 143
+            }
+        }
+    }, { quoted: dtzminibot });
+    
+    await socket.sendMessage(sender, { 
+                audio: { url: config.DTZ_MINI_BOT_AUDIO }, 
+                mimetype: "audio/mpeg",
+                ptt: true
+            }, { quoted: dtzminibot });
+    break;
+}
+    case 'downmenu': {
+    await socket.sendMessage(sender, { react: { text: '📍', key: msg.key } });
+
+        let teksnya = `*DTZ MINI BOT DOWNLOAD MENU 📥*
+
+╭────────────────┈⊷
+┇
+┋ *📍 Command : \`.Song\`*
+┋  *📃 Usage :* Download Songs
+┋
+┋ *📍 Command : \`.csend\`*
+┋  *📃 Usage :* Download song and forward to channel
+┋
+┋ *📍 Command : \`.video\`*
+┋  *📃 Usage :* Download Videos
+┋
+┋ *📍 Command : \`.fb\`*
+┋  *📃 Usage :* Download Fb Videos
+┋
+┋ *📍 Command : \`.tiktok\`*
+┋  *📃 Usage :* Download Tiktok Videos
+┋
+┋ *📍 Command : \`.mediafire\`*
+┋  *📃 Usage :* Download mediafire file
+┇ 
+┋ *📍 Command : \`.ig\`*
+┋  *📃 Usage :* Download Instagram Videos
+┇ 
+┋ *📍 Command : \`.ts\`*
+┋  *📃 Usage :* Search List Of Tiktok Videos
+┋
+┋ *📍 Command : \`.img\`*
+┋  *📃 Usage :* Download Images From Google
+┋
+┋ *📍 Command : \`.aiimg\`*
+┋  *📃 Usage :* Download Ai Images
+┇ 
+╰────────────────┈⊷
+
+*🌐 DTZ Mini Bot Website :*
+> ${config.PAIR}
+
+*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ*`;
+
+        let imageUrl = config.DTZ_MINI_BOT_IMAGE;
+
+        let vpsOptions = [
+        { title: "MAIN MENU", description: "© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ", id: `${config.PREFIX}mainmenu` },
+        { title: "FUN MENU", description: "© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴛʜᴇ ᴅᴀʀᴋ ᴛᴇᴄʜ ᴢᴏɴᴇ", id: `${config.PREFIX}funmenu` }
+    ];
+
+    let buttonSections = [
+        {
+            title: "ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ᴍᴇɴᴜ ᴄᴏᴍᴍᴀɴᴅꜱ",
+            highlight_label: "ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ᴠ2 💬",
+            rows: vpsOptions
+        }
+    ];
+
+    let buttons = [
+        {
+            buttonId: "action",
+            buttonText: { displayText: "Sᴇʟᴇᴄᴛ Mᴇɴᴜ" },
+            type: 4,
+            nativeFlowInfo: {
+                name: "single_select",
+                paramsJson: JSON.stringify({
+                    title: "CHOOSE MENU TAB",
+                    sections: buttonSections
+                })
+            }
+        },
+        {
+            buttonId: `${config.PREFIX}system`,
+            buttonText: { displayText: '© ꜱʏꜱᴛᴇᴍ ᴄᴍᴅ' },
+            type: 1
+        },
+        {
+            buttonId: `${config.PREFIX}alive`,
+            buttonText: { displayText: '© ᴀʟɪᴠᴇ ᴄᴍᴅ' },
+            type: 1
+        }
+    ];
+
+        await socket.sendMessage(sender, {
+            buttons,
+            headerType: 1,
+            viewOnce: true,
+            caption: teksnya,
+            image: { url: imageUrl },
+            contextInfo: {
+                mentionedJid: [sender], 
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363401720377971@newsletter',
+                newsletterName: 'ᴅᴛᴢ ᴍɪɴɪ ʙᴏᴛ ᴠ2 📌',
+                    serverMessageId: 143
+                }
+            }
+        }, { quoted: dtzminibot }); 
+        break;
+    }
 
 // ==================== MAIN MENU ====================
 
