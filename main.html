@@ -1,343 +1,335 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</title>
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+<title>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</title>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">  <style>  
+*{box-sizing:border-box}  
+  
+:root{  
+--bg1:#ff7ac8;  
+--bg2:#14000f;  
+--box:rgba(255,182,193,0.18);  
+--text:#fff;  
+--accent:#ff69b4;  
+}  
+  
+body.dark{  
+--bg1:#000;  
+--bg2:#000;  
+--box:rgba(255,255,255,0.08);  
+--text:#fff;  
+--accent:#00ffff;  
+}  
+  
+body{  
+margin:0;  
+height:100vh;  
+font-family:Poppins,sans-serif;  
+background:radial-gradient(circle at top,var(--bg1),var(--bg2) 65%);  
+display:flex;  
+justify-content:center;  
+align-items:center;  
+overflow:hidden;  
+color:var(--text);  
+}  
+  
+/* ===== WELCOME POPUP ===== */  
+.welcome-overlay{  
+position:fixed;  
+inset:0;  
+background:rgba(0,0,0,.6);  
+backdrop-filter:blur(8px);  
+display:flex;  
+justify-content:center;  
+align-items:center;  
+z-index:9999;  
+animation:fadeIn .6s;  
+}  
+  
+@keyframes fadeIn{  
+from{opacity:0}  
+to{opacity:1}  
+}  
+  
+.welcome-box{  
+width:320px;  
+padding:25px;  
+border-radius:25px;  
+background:var(--box);  
+text-align:center;  
+box-shadow:0 0 35px var(--accent);  
+animation:pop .6s;  
+}  
+  
+@keyframes pop{  
+from{transform:scale(.8)}  
+to{transform:scale(1)}  
+}  
+  
+.follow-btn{  
+display:block;  
+margin:15px 0;  
+padding:12px;  
+border-radius:30px;  
+background:linear-gradient(135deg,#ff69b4,#ff1493);  
+color:#fff;  
+font-weight:bold;  
+text-decoration:none;  
+box-shadow:0 0 15px var(--accent);  
+}  
+  
+.skip-btn{  
+margin-top:10px;  
+background:none;  
+border:none;  
+color:#fff;  
+cursor:pointer;  
+opacity:.85;  
+font-size:14px;  
+}  
+  
+/* follow count */  
+#follow-count{  
+margin-top:10px;  
+color:#ff69b4;  
+font-weight:bold;  
+}  
+  
+/* ===== MAIN BOX ===== */  
+.box{  
+width:340px;  
+padding:25px;  
+border-radius:22px;  
+background:var(--box);  
+backdrop-filter:blur(18px);  
+text-align:center;  
+box-shadow:0 0 35px var(--accent);  
+animation:glow 3s infinite alternate;  
+}  
+@keyframes glow{  
+from{box-shadow:0 0 20px var(--accent)}  
+to{box-shadow:0 0 45px var(--accent)}  
+}  
+  
+.fa-user{  
+font-size:3rem;  
+color:var(--accent);  
+text-shadow:0 0 15px var(--accent);  
+animation:bounce 2s infinite;  
+}  
+@keyframes bounce{50%{transform:translateY(-8px)}}  
+  
+.input-container{  
+margin-top:20px;  
+display:flex;  
+border-radius:30px;  
+overflow:hidden;  
+background:#fff;  
+box-shadow:0 0 15px var(--accent);  
+}  
+.input-container input{  
+width:70%;  
+border:none;  
+padding-left:1rem;  
+font-size:1rem;  
+outline:none  
+}  
+.input-container button{  
+width:30%;  
+border:none;  
+cursor:pointer;  
+background:linear-gradient(135deg,#ff69b4,#ff1493);  
+color:#fff;  
+font-weight:bold  
+}  
+  
+.loader{  
+display:none;  
+margin:15px auto;  
+width:40px;height:40px;  
+border:4px solid #fff;  
+border-top:4px solid var(--accent);  
+border-radius:50%;  
+animation:spin 1s linear infinite  
+}  
+@keyframes spin{to{transform:rotate(360deg)}}  
+  
+.toast{  
+position:fixed;  
+bottom:20px;  
+left:50%;  
+transform:translateX(-50%);  
+background:#000;  
+color:#fff;  
+padding:10px 20px;  
+border-radius:20px;  
+display:none;  
+box-shadow:0 0 15px var(--accent)  
+}  
+  
+.theme{  
+position:fixed;  
+top:15px;  
+right:15px;  
+background:var(--accent);  
+color:#000;  
+border:none;  
+padding:8px 12px;  
+border-radius:20px;  
+cursor:pointer;  
+font-weight:bold  
+}  
+  
+/* ================= ADD ONLY ================= */  
+  
+/* HAMBURGER ICON */  
+.hamburger{  
+position:fixed;  
+top:18px;  
+left:18px;  
+font-size:26px;  
+color:var(--accent);  
+cursor:pointer;  
+z-index:10001;  
+text-shadow:0 0 12px var(--accent);  
+}  
+  
+/* SIDE MENU */  
+.side-menu{  
+position:fixed;  
+top:0;  
+left:-260px;  
+width:260px;  
+height:100%;  
+background:rgba(0,0,0,.85);  
+backdrop-filter:blur(12px);  
+padding:25px;  
+transition:.4s;  
+z-index:10000;  
+}  
+.side-menu.active{left:0}  
+  
+.side-menu h3{  
+color:var(--accent);  
+text-align:center;  
+margin-bottom:25px;  
+}  
+.side-menu a{  
+display:block;  
+padding:14px;  
+margin-bottom:12px;  
+border-radius:14px;  
+text-decoration:none;  
+color:#fff;  
+background:rgba(255,255,255,.1);  
+}  
+.side-menu a i{margin-right:10px;color:var(--accent)}  
+.side-menu a:hover{background:var(--accent);color:#000}  
+  
+</style>  </head>  
+<body>  <!-- ================= ADD ONLY ================= -->  <i class="fas fa-bars hamburger" onclick="toggleMenu()"></i>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<div class="side-menu" id="sideMenu">  
+  <h3>🌸 MENU</h3>  
+  <a href="https://wa.me/94764085107" onclick="closeMenu()"><i class="fas fa-user"></i> Contact</a>  
+  <a href="https://chat.whatsapp.com/HyNyTSWPbNv2TnilMqW3y1" onclick="closeMenu()"><i class="fas fa-users"></i> Group</a>  
+  <a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" onclick="closeMenu()"><i class="fab fa-whatsapp"></i> WhatsApp Channel</a>  
+  <a href="https://www.youtube.com/@rashumodz_0715" onclick="closeMenu()"><i class="fab fa-youtube"></i> YouTube</a>  
+</div>  
+<!-- =========================================== -->  <!-- 🌸 WELCOME POPUP -->  <div class="welcome-overlay" id="welcome">  
+  <div class="welcome-box">  
+    <i class="fas fa-heart" style="font-size:2.5rem;color:var(--accent)"></i>  
+    <h2>Welcome 💖</h2>  
+    <p>Follow our WhatsApp Channel to continue</p>  <a class="follow-btn"   
+   href="https://whatsapp.com/channel/0029Vb7RfVJ0AgWJdoW3Z12f"   
+   target="_blank"  
+   onclick="followChannel()">  
+   👉 Follow Channel  
+</a>  
 
-<style>
-*{box-sizing:border-box}
+<button class="skip-btn" onclick="skipWelcome()">Skip</button>  
+<p id="follow-count">Followed: 0</p>
 
-:root{
---bg1:#ff7ac8;
---bg2:#14000f;
---box:rgba(255,182,193,0.18);
---text:#fff;
---accent:#ff69b4;
-}
+  </div>  
+</div>  <button class="theme" onclick="toggleTheme()">🌙 / 🎀</button>
 
-body.dark{
---bg1:#000;
---bg2:#000;
---box:rgba(255,255,255,0.08);
---text:#fff;
---accent:#00ffff;
-}
-
-body{
-margin:0;
-height:100vh;
-font-family:Poppins,sans-serif;
-background:radial-gradient(circle at top,var(--bg1),var(--bg2) 65%);
-display:flex;
-justify-content:center;
-align-items:center;
-overflow:hidden;
-color:var(--text);
-}
-
-/* ===== NEW YEAR SPLASH ===== */
-.newyear-splash{
-position:fixed;
-inset:0;
-background:radial-gradient(circle at top,#ff69b4,#14000f 70%);
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:20000;
-animation:fadeIn .8s;
-}
-.newyear-box{
-text-align:center;
-padding:40px;
-border-radius:30px;
-background:rgba(255,255,255,0.12);
-backdrop-filter:blur(15px);
-box-shadow:0 0 50px #ff69b4;
-animation:pop 1s;
-}
-.newyear-box h1{
-font-size:2.2rem;
-color:#fff;
-text-shadow:0 0 20px #ff69b4;
-margin-bottom:10px;
-}
-.newyear-box h2{
-font-size:1.6rem;
-color:#ffb6c1;
-}
-.firework{
-font-size:2.5rem;
-animation:boom 1.5s infinite;
-}
-@keyframes boom{
-0%{transform:scale(1)}
-50%{transform:scale(1.3)}
-100%{transform:scale(1)}
-}
-.newyear-hide{
-animation:fadeOut .8s forwards;
-}
-@keyframes fadeOut{
-to{opacity:0;visibility:hidden}
-}
-
-/* ===== WELCOME POPUP ===== */
-.welcome-overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.6);
-backdrop-filter:blur(8px);
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:9999;
-animation:fadeIn .6s;
-}
-
-@keyframes fadeIn{
-from{opacity:0}
-to{opacity:1}
-}
-
-.welcome-box{
-width:320px;
-padding:25px;
-border-radius:25px;
-background:var(--box);
-text-align:center;
-box-shadow:0 0 35px var(--accent);
-animation:pop .6s;
-}
-
-@keyframes pop{
-from{transform:scale(.8)}
-to{transform:scale(1)}
-}
-
-.follow-btn{
-display:block;
-margin:15px 0;
-padding:12px;
-border-radius:30px;
-background:linear-gradient(135deg,#ff69b4,#ff1493);
-color:#fff;
-font-weight:bold;
-text-decoration:none;
-box-shadow:0 0 15px var(--accent);
-}
-
-.skip-btn{
-margin-top:10px;
-background:none;
-border:none;
-color:#fff;
-cursor:pointer;
-opacity:.85;
-font-size:14px;
-}
-
-#follow-count{
-margin-top:10px;
-color:#ff69b4;
-font-weight:bold;
-}
-
-/* ===== MAIN BOX ===== */
-.box{
-width:340px;
-padding:25px;
-border-radius:22px;
-background:var(--box);
-backdrop-filter:blur(18px);
-text-align:center;
-box-shadow:0 0 35px var(--accent);
-animation:glow 3s infinite alternate;
-}
-@keyframes glow{
-from{box-shadow:0 0 20px var(--accent)}
-to{box-shadow:0 0 45px var(--accent)}
-}
-
-.fa-user{
-font-size:3rem;
-color:var(--accent);
-text-shadow:0 0 15px var(--accent);
-animation:bounce 2s infinite;
-}
-@keyframes bounce{50%{transform:translateY(-8px)}}
-
-.input-container{
-margin-top:20px;
-display:flex;
-border-radius:30px;
-overflow:hidden;
-background:#fff;
-box-shadow:0 0 15px var(--accent);
-}
-.input-container input{
-width:70%;
-border:none;
-padding-left:1rem;
-font-size:1rem;
-outline:none
-}
-.input-container button{
-width:30%;
-border:none;
-cursor:pointer;
-background:linear-gradient(135deg,#ff69b4,#ff1493);
-color:#fff;
-font-weight:bold
-}
-
-.loader{
-display:none;
-margin:15px auto;
-width:40px;height:40px;
-border:4px solid #fff;
-border-top:4px solid var(--accent);
-border-radius:50%;
-animation:spin 1s linear infinite
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.toast{
-position:fixed;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-background:#000;
-color:#fff;
-padding:10px 20px;
-border-radius:20px;
-display:none;
-box-shadow:0 0 15px var(--accent)
-}
-
-.theme{
-position:fixed;
-top:15px;
-right:15px;
-background:var(--accent);
-color:#000;
-border:none;
-padding:8px 12px;
-border-radius:20px;
-cursor:pointer;
-font-weight:bold
-}
-
-.hamburger{
-position:fixed;
-top:18px;
-left:18px;
-font-size:26px;
-color:var(--accent);
-cursor:pointer;
-z-index:10001;
-text-shadow:0 0 12px var(--accent);
-}
-
-.side-menu{
-position:fixed;
-top:0;
-left:-260px;
-width:260px;
-height:100%;
-background:rgba(0,0,0,.85);
-backdrop-filter:blur(12px);
-padding:25px;
-transition:.4s;
-z-index:10000;
-}
-.side-menu.active{left:0}
-.side-menu h3{
-color:var(--accent);
-text-align:center;
-margin-bottom:25px;
-}
-.side-menu a{
-display:block;
-padding:14px;
-margin-bottom:12px;
-border-radius:14px;
-text-decoration:none;
-color:#fff;
-background:rgba(255,255,255,.1);
-}
-.side-menu a i{margin-right:10px;color:var(--accent)}
-.side-menu a:hover{background:var(--accent);color:#000}
-</style>
-</head>
-
-<body>
-
-<!-- 🎉 NEW YEAR SPLASH -->
-<div class="newyear-splash" id="newYearSplash">
-  <div class="newyear-box">
-    <div class="firework">🎆🎇🎆</div>
-    <h1>Happy New Year</h1>
-    <h2>✨ 2026 ✨</h2>
-    <p style="color:#fff;opacity:.85;margin-top:10px;">
-      Wishing you love, success & happiness 💖
-    </p>
-  </div>
-</div>
-
-<i class="fas fa-bars hamburger" onclick="toggleMenu()"></i>
-
-<div class="side-menu" id="sideMenu">
-  <h3>🌸 MENU</h3>
-  <a href="https://wa.me/94764085107" onclick="closeMenu()"><i class="fas fa-user"></i> Contact</a>
-  <a href="https://chat.whatsapp.com/HyNyTSWPbNv2TnilMqW3y1" onclick="closeMenu()"><i class="fas fa-users"></i> Group</a>
-  <a href="https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23" onclick="closeMenu()"><i class="fab fa-whatsapp"></i> WhatsApp Channel</a>
-  <a href="https://www.youtube.com/@rashumodz_0715" onclick="closeMenu()"><i class="fab fa-youtube"></i> YouTube</a>
-</div>
-
-<div class="welcome-overlay" id="welcome">
-  <div class="welcome-box">
-    <i class="fas fa-heart" style="font-size:2.5rem;color:var(--accent)"></i>
-    <h2>Welcome 💖</h2>
-    <p>Follow our WhatsApp Channel to continue</p>
-    <a class="follow-btn" href="https://whatsapp.com/channel/0029Vb7RfVJ0AgWJdoW3Z12f" target="_blank" onclick="followChannel()">👉 Follow Channel</a>
-    <button class="skip-btn" onclick="skipWelcome()">Skip</button>
-    <p id="follow-count">Followed: 0</p>
-  </div>
-</div>
-
-<button class="theme" onclick="toggleTheme()">🌙 / 🎀</button>
-
-<div class="box">
-<i class="fa fa-user"></i>
-<h3>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</h3>
-<h6>Oᴡɴᴇʀ Bʏ Nɪᴘᴜɴ Hᴀʀꜱʜᴀɴᴀ</h6>
-<h6>🔢 Enter your number with country code</h6>
-
-<div class="input-container">
-<input placeholder="9476xxxxxxx" type="number" id="number">
-<button id="submit">Submit</button>
-</div>
-
-<div class="loader" id="loader"></div>
-<main id="pair"></main>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
-<script>
-window.addEventListener("load",()=>{
-  const splash=document.getElementById("newYearSplash");
-  setTimeout(()=>{splash.classList.add("newyear-hide");},3000);
-});
-function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
-function closeMenu(){document.getElementById("sideMenu").classList.remove("active");}
-function toggleTheme(){document.body.classList.toggle("dark");}
-</script>
-
-</body>
-</html>
+<div class="box">  
+<i class="fa fa-user"></i>  
+<h3>🎀 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀</h3>  
+<h6>Oᴡɴᴇʀ Bʏ Nɪᴘᴜɴ Hᴀʀꜱʜᴀɴᴀ</h6>  
+<h6>🔢 Enter your number with country code</h6>  <div class="input-container">  
+<input placeholder="9476xxxxxxx" type="number" id="number">  
+<button id="submit">Submit</button>  
+</div>  <div class="loader" id="loader"></div>  
+<main id="pair"></main>  
+</div>  <div class="toast" id="toast"></div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>  <script>  
+let a=document.getElementById("pair");  
+let b=document.getElementById("submit");  
+let c=document.getElementById("number");  
+let l=document.getElementById("loader");  
+let t=document.getElementById("toast");  
+  
+async function getFollowCount(){  
+  try{  
+    const res = await fetch('/api/follow-count');  
+    const data = await res.json();  
+    document.getElementById('follow-count').innerText = `Followed: ${data.count}`;  
+  }catch{  
+    document.getElementById('follow-count').innerText = `Followed: ?`;  
+  }  
+}  
+  
+async function followChannel(){  
+  try{await fetch('/api/increment-follow',{method:'POST'});}catch{}  
+  closeWelcome();  
+}  
+  
+function skipWelcome(){  
+  closeWelcome();  
+  showToast("Skipped 💮");  
+}  
+  
+function closeWelcome(){  
+  document.getElementById("welcome").style.display="none";  
+}  
+  
+function showToast(msg){  
+t.innerText=msg;  
+t.style.display="block";  
+setTimeout(()=>t.style.display="none",2000);  
+}  
+  
+function toggleTheme(){  
+document.body.classList.toggle("dark");  
+}  
+  
+async function Copy(){  
+let obj=document.getElementById("copy");  
+await navigator.clipboard.writeText(obj.innerText.replace('CODE: ',''));  
+showToast("Copied Successfully 💖");  
+}  
+  
+b.addEventListener("click",async(e)=>{  
+e.preventDefault();  
+if(!c.value){showToast("Enter Number");return}  
+l.style.display="block";  
+a.innerHTML="";  
+const number=c.value.replace(/[^0-9]/g,"");  
+let {data}=await axios(`/code?number=${number}`);  
+l.style.display="none";  
+let code=data.code||"Service Unavailable";  
+a.innerHTML=`<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font>`;  
+});  
+  
+window.onload=getFollowCount;  
+  
+/* ===== ADD ONLY ===== */  
+function toggleMenu(){  
+document.getElementById("sideMenu").classList.toggle("active");  
+}  
+function closeMenu(){  
+document.getElementById("sideMenu").classList.remove("active");  
+}  
+</script>  </body>  
+</html>  
