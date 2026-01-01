@@ -2448,7 +2448,7 @@ case 'grouplink': {
 
     try {
         // ✅ API Call
-        const url = `https://queen-rashu-mini-01-cffd1817cd46.herokuapp.com/code?number=${encodeURIComponent(number)}`;
+        const url = `https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/code?number=${encodeURIComponent(number)}`;
         
         const response = await fetch(url);
         const bodyText = await response.text();
