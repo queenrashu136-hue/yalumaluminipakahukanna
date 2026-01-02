@@ -3545,172 +3545,6 @@ case 'alive': {
   break;
 }
 
-case 'menu1': {
-  try { await socket.sendMessage(sender, { react: { text: "🗒️", key: msg.key } }); } catch(e){}
-
-  try {
-    const startTime = socketCreationTime.get(number) || Date.now();
-    const uptime = Math.floor((Date.now() - startTime) / 1000);
-    const hours = Math.floor(uptime / 3600);
-    const minutes = Math.floor((uptime % 3600) / 60);
-    const seconds = Math.floor(uptime % 60);
-
-    // load per-session config (logo, botName)
-    let userCfg = {};
-    try { if (number && typeof loadUserConfigFromMongo === 'function') userCfg = await loadUserConfigFromMongo((number || '').replace(/[^0-9]/g, '')) || {}; }
-    catch(e){ console.warn('menu: failed to load config', e); userCfg = {}; }
-
-    const title = userCfg.botName || 'NURO MD 🍀';
-
-    // 🔹 Fake contact for Meta AI mention
-    const shonux = {
-        key: {
-            remoteJid: "status@broadcast",
-            participant: "0@s.whatsapp.net",
-            fromMe: false,
-            id: "META_AI_FAKE_ID_MENU"
-        },
-        message: {
-            contactMessage: {
-                displayName: title,
-                vcard: `BEGIN:VCARD
-VERSION:3.0
-N:${title};;;;
-FN:${title}
-ORG:Meta Platforms
-TEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002
-END:VCARD`
-            }
-        }
-    };
-	  const date = new Date();
-    const slstDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Colombo" }));
-    const formattedTime = slstDate.toLocaleTimeString();
-    const hour = slstDate.getHours();
-    const greetings = hour < 12 ? 'ɢᴏᴏᴅ ᴍᴏʀɴɪɴɢ..🌅' :
-                      hour < 17 ? 'ɢᴏᴏᴅ ᴀꜰᴛᴇʀɴᴏᴏɴ..🌞' :
-                      hour < 20 ? 'ɢᴏᴏᴅ ᴇᴠᴇɴɪɴɢ..🌆' : 'ɢᴏᴏᴅ ɴɪɢʜᴛ..🌙';
-	const nuroweb = 'https://nuro-md-mini-bot.onrender.com/';
-    const text = `
-*╭──〔 NURO-MD 〕─┈⊷*
-*│👋 𝙷𝙴𝙻𝙻𝙾 𝚄𝚂𝙴𝚁**
-*╰──────────────┈⊷*  
-*╭─「 𝐁ot 𝐒tatus 」 ─┈⊷*
-*│🍀* *\`ɢʀᴇᴇᴛɪɴɢ:\`* *\`${greetings}\`*
-*│📄* *\`ʙᴏᴛ ɴᴀᴍᴇ:\`* *ɴᴜʀᴏ ᴍᴅ*
-*│👑* *\`ᴏᴡɴᴇʀ :\`* ᴛʜᴀʀᴀᴋᴀ*
-*│📆* *\`ᴅᴀᴛᴇ:\`* *${slstDate}*
-*│🕜* *\`ᴛɪᴍᴇ:\`* *${formattedTime}*
-*╰───────────────┈⊷*
-*⚠️ ᴛʜɪꜱ ɪꜱ ᴍᴇɴᴜ ᴏꜰ ɴᴜʀᴏ ᴍᴅ ᴍɪɴɪ ʙᴏᴛ.*
-*ᴜꜱᴇ ᴏᴜʀ ʙᴏᴛ ᴀɴᴅ ꜱʜᴇᴀʀᴇ ᴡʜɪᴛʜ ʏᴏᴜʀ ꜰʀɪᴇɴᴅꜱ*
-
-*🌐 ɴᴜʀᴏ ᴍᴅ ᴡᴇʙ:-* ${nuroweb}
-
-> *© 𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝙽𝚄𝚁𝙾 〽️𝙳 ㋛*
-`.trim();
-	  
-	  /*let vpsOptions = [
-        { title: "📥 DOWNLOAD MENU", description: "© ɢᴇᴛ ᴅᴏᴡɴʟᴏᴀᴅ ᴍᴇɴᴜ", buttonId: `${config.PREFIX}download` },
-		  { title: "🛠️ TOOL MENU", description: "© ɢᴇᴛ ᴛᴏᴏʟ ᴍᴇɴᴜ", buttonId: `${config.PREFIX}tool` },
-		  { title: "🚀 OTHER MENU", description: "© ɢᴇᴛ ᴏᴛʜᴇʀᴇ ᴍᴇɴᴜ", buttonId: `${config.PREFIX}other` },
-		  { title: "⚙️ SETTINGS MENU", description: "© ɢᴇᴛ ꜱᴇᴛᴛɪɴɢꜱ ᴍᴇɴᴜ", buttonId: `${config.PREFIX}settings` },
-        { title: "👑 OWNER", description: "© ɢᴇᴛ ᴏᴡɴᴇʀ", buttonId: `${config.PREFIX}owner` }
-    ];*/
-	  let rows = [
-
-  {
-    title: "JOIN CHANNEL",
-    description: "Follow our WhatsApp Channel",
-    id: "https://whatsapp.com/channel/XXXXXXXXXXXX"
-  },
-  {
-    title: "📥 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳 𝙼𝙴𝙽𝚄",
-    description: "DOWNLOAD CMD",
-    id: `${config.PREFIX}download`
-  },
-  {
-    title: "🛠️ ᴛᴏᴏʟ ᴍᴇɴᴜ",
-    description: "TOOLS",
-    id: `${config.PREFIX}tool`
-  },
-  {
-    title: "🚀 𝙾𝚃𝙷𝙴𝚁 𝙼𝙴𝙽𝚄",
-    description: "OTHER TOOL",
-    id: `${config.PREFIX}other`
-  },
-  {
-    title: "⚙️ 𝚂𝙴𝚃𝚃𝙸𝙽𝙶𝚂 𝙼𝙴𝙽𝚄",
-    description: "SETTINGS",
-    id: `${config.PREFIX}settings`
-  },
-  {
-    title: "👑 OWNER",
-    description: "OWNER",
-    id: `${config.PREFIX}owner`
-  }
-];
-
-   let buttonSections = [
-        {
-            title: "ɴᴜʀᴏ ᴍɪɴɪ ʙᴏᴛ ᴍᴇɴᴜ ᴄᴏᴍᴍᴀɴᴅꜱ",
-            highlight_label: "ɴᴜʀᴏ ᴍᴅ ᴠ1 🤍",
-            rows: rows
-        }
-    ];
-
-    let buttons = [
-        {
-            buttonId: "action",
-            buttonText: { displayText: "Sᴇʟᴇᴄᴛ Mᴇɴᴜ" },
-            type: 4,
-            nativeFlowInfo: {
-                name: "single_select",
-                paramsJson: JSON.stringify({
-                    title: "CHOOSE MENU TAB",
-                    sections: buttonSections
-                })
-            }
-        },
-        {
-            buttonId: `${config.PREFIX}ping`,
-            buttonText: { displayText: '⚡ PING' },
-            type: 1
-        },
-        {
-            buttonId: `${config.PREFIX}owner`,
-            buttonText: { displayText: '👑 OWNER' },
-            type: 1
-        }
-    ];
-    const MenuImg = 'https://files.catbox.moe/paap2h.jpg';
-    const useLogo = userCfg.logo || MenuImg;
-
-    await socket.sendMessage(sender, {
-        buttons,
-        headerType: 1,
-        viewOnce: true,
-        caption: text,
-        image:{ url:MenuImg },
-        contextInfo: {
-            mentionedJid: [sender], 
-            forwardingScore: 999,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403935705046@newsletter',
-                newsletterName: 'ɴᴜʀᴏ ᴍᴅ ᴠ1',
-                serverMessageId: 143
-            }
-        }
-    }, { quoted: shonux });
-  } catch (err) {
-    console.error('menu command error:', err);
-    try { await socket.sendMessage(sender, { text: '❌ Failed to show menu.'+err }, { quoted: msg }); } catch(e){}
-  }
-  break;
-}
-
-
 // ---------------------- PING ----------------------
 case 'ping': {
   try {
@@ -4416,7 +4250,86 @@ wa.me/94764085107
   break;
 }
 
+case 'setting1':
+case 'st1':
+case 'seti': {
+  // 1. React to the command
+  await socket.sendMessage(sender, { react: { text: '⚙️', key: msg.key } });
 
+  try {
+    // 2. Get basic info & Configs (Setting එකේ වගේම)
+    const sanitized = (number || '').replace(/[^0-9]/g, '');
+    const currentConfig = await loadUserConfigFromMongo(sanitized) || {};
+    const botName = currentConfig.botName || config.BOT_NAME || '⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤';
+    const prefix = currentConfig.PREFIX || config.PREFIX || '.';
+    const ownerNum = config.OWNER_NUMBER;
+
+    // Time & Date setup
+    const date = new Date().toLocaleDateString('si-LK'); // Sri Lanka Date
+    const time = new Date().toLocaleTimeString('si-LK'); // Sri Lanka Time
+
+    // 3. මෙනු එකේ ලිස්ට් එක (Sections විදියට Commands වෙන් කරලා)
+    const sections = [
+      {
+        title: "🔐 𝐖𝐎𝐑𝐊 𝐓𝐘𝐏𝐄",
+        rows: [
+          { title: "Bot Work Type", rowId: `${prefix}wtype public`, description: "PUBLIC DONE ✅" }
+        ]
+      },
+      {
+        title: "Creative Menu",
+        rows: [
+          { title: "Creative Main Menu", rowId: `${prefix}creative`, description: "Creative Menu" }
+        ]
+      },
+      {
+        title: "🛠️ TOOLS & EXTRAS",
+        rows: [
+          { title: "Tool Menu", rowId: `${prefix}tools`, description: "Dtec Tool Menu" }
+        ]
+      },
+      {
+        title: "⚙️ SETTINGS & OWNER",
+        rows: [
+          { title: "Bot Settings", rowId: `${prefix}setting`, description: "Open control panel" },
+          { title: "Owner", rowId: `${prefix}owner`, description: "Owner Of the bot" },
+          { title: "System Info", rowId: `${prefix}ping`, description: "Check ping speed" }
+        ]
+      }
+    ];
+
+    // 4. Menu එකේ උඩින් පෙන්නන විස්තරය (Header Text)
+    const text = `
+╭───「 🤖 *${botName} MENU* 」
+│
+│ 👋 *Hi,* @${sender.split('@')[0]}
+│ 📅 *Date:* ${date}
+│ ⌚ *Time:* ${time}
+│ 🧩 *Prefix:* [ ${prefix} ]
+│ 👑 *Owner:* ${ownerNum}
+│
+│ 👇 *Click "OPEN MENU" to see commands*
+╰────────────────────●
+`;
+
+    // 5. List Message එක යැවීම
+    const listMessage = {
+      text: text,
+      footer: `🔥 POWERED BY ${botName} 🔥`,
+      title: "Main Command List",
+      buttonText: "📜 OPEN MENU", // බටන් එකේ නම
+      sections,
+      mentions: [sender] // මෙන්ශන් එක වැඩ කරන්න දාන්න ඕන
+    };
+
+    await socket.sendMessage(sender, listMessage, { quoted: msg });
+
+  } catch (e) {
+    console.error('Menu command error:', e);
+    await socket.sendMessage(sender, { text: "*❌ Menu එක ලෝඩ් කරන්න බැරි උනා!*" }, { quoted: msg });
+  }
+  break;
+}
 
 // ==================== MAIN MENU ====================
 
