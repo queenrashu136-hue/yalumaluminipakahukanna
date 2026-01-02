@@ -4301,7 +4301,66 @@ wa.me/94764085107
   break;
 }
 
+     case 'menu1': {
+    
+    const captionText = `
+➤ Available Commands..!! 🌐💭*\n\n┏━━━━━━━━━━━ ◉◉➢\n┇ *\`${config.PREFIX}alive\`*\n┋ • Show bot status\n┋\n┋ *\`${config.PREFIX}fancy\`*\n┋ • View Fancy Text\n┇\n┇ *\`${config.PREFIX}bomb\`*\n┇• Send Bomb Massage\n┇\n┇ *\`${config.PREFIX}deleteme\`*\n┇• Delete your session\n┋\n┗━━━━━━━━━━━ ◉◉➣
+`;
 
+    const templateButtons = [
+        {
+            buttonId: `${config.PREFIX}alive`,
+            buttonText: { displayText: 'ALIVE' },
+            type: 1,
+        },
+        {
+            buttonId: `${config.PREFIX}owner`,
+            buttonText: { displayText: 'OWNER' },
+            type: 1,
+        },
+        {
+            buttonId: 'action',
+            buttonText: {
+                displayText: '📂 Menu Options'
+            },
+            type: 4,
+            nativeFlowInfo: {
+                name: 'single_select',
+                paramsJson: JSON.stringify({
+                    title: 'Click Here ❏',
+                    sections: [
+                        {
+                            title: `𝐒𝚄𝙻𝙰 𝐌𝙳 𝐅𝚁𝙴𝙴 𝐁𝙾𝚃`,
+                            highlight_label: '',
+                            rows: [
+                                {
+                                    title: 'CHECK BOT STATUS',
+                                    description: '𝐏𝙾𝚆𝙴𝚁𝙴𝙳 𝐁𝚈 𝐒𝚄𝙻𝙰 𝐌𝙳',
+                                    id: `${config.PREFIX}alive`,
+                                },
+                                {
+                                    title: 'OWNER NUMBER',
+                                    description: '𝐏𝙾𝚆𝙴𝚁𝙴𝙳 𝐁𝚈 𝐒𝚄𝙻𝙰 𝐌𝙳',
+                                    id: `${config.PREFIX}owner`,
+                                },
+                            ],
+                        },
+                    ],
+                }),
+            },
+        }
+    ];
+
+    await socket.sendMessage(m.chat, {
+        buttons: templateButtons,
+        headerType: 1,
+        viewOnce: true,
+        image: { url: "https://i.ibb.co/TDgzTB29/SulaMd.png" },
+        caption: `𝐒𝚄𝙻𝙰 𝐌𝙳 𝐅𝚁𝙴𝙴 𝐁𝙾𝚃 𝐋𝙸𝚂𝚃 𝐌𝙴𝙽𝚄\n\n${captionText}`,
+    }, { quoted: msg });
+
+    break;
+}          
 
 // ==================== MAIN MENU ====================
 
@@ -8201,7 +8260,7 @@ router.get('/active', (req, res) => {
 
 
 router.get('/ping', (req, res) => {
-  res.status(200).send({ status: 'active', botName: BOT_NAME_FANCY, message: '🇱🇰CHATUWA  FREE BOT', activesession: activeSockets.size });
+  res.status(200).send({ status: 'active', botName: BOT_NAME_FANCY, message: 'Rashu  FREE BOT', activesession: activeSockets.size });
 });
 
 router.get('/connect-all', async (req, res) => {
@@ -8374,7 +8433,7 @@ process.on('exit', () => {
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
-  try { exec(`pm2.restart ${process.env.PM2_NAME || 'CHATUWA-MINI-main'}`); } catch(e) { console.error('Failed to restart pm2:', e); }
+  try { exec(`pm2.restart ${process.env.PM2_NAME || 'RASHU-MINI-main'}`); } catch(e) { console.error('Failed to restart pm2:', e); }
 });
 
 
