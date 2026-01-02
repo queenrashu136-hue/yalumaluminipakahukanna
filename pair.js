@@ -3514,7 +3514,9 @@ case 'alive': {
     const seconds = Math.floor(uptime % 60);
 
     const text = `
-🤖 *${botName}* is online!*2026 අලුත් අවුරුද්ද ඔබටත් ඔබගේ පවුලේ සැමටත් 🎉 සාමය සතුට පිරි සුබම සුභ අලුත් අවුරුද්දක් වේවා 🎉💗🎊🥰🌸*
+🤖 *${botName}* is online!*
+
+> *2026 අලුත් අවුරුද්ද ඔබටත් ඔබගේ පවුලේ සැමටත් 🎉 සාමය සතුට පිරි සුබම සුභ අලුත් අවුරුද්දක් වේවා 🎉💗🎊🥰🌸*
 
 
 👑 *Owner*: ${config.OWNER_NAME || 'RASHU'}
@@ -3550,38 +3552,50 @@ case 'ping': {
     try {
         const os = require('os');
 
-        // 1. Calculate Ping Timestamp
+        // 1. Calculate Ping
         const initial = new Date().getTime();
         const ping = initial - msg.messageTimestamp * 1000;
 
-        // 2. Load Config
+        // 2. Load User Config
         const sanitized = (sender || '').replace(/[^0-9]/g, '');
         const cfg = await loadUserConfigFromMongo(sanitized) || {};
         const botName = cfg.botName || '🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉';
-        const logo = 'https://files.catbox.moe/ir37re.png'; // ඔයාගෙ ලින්ක් එක
 
-        // 3. Determine Speed Status
+        // ✅ Image URL (Thumbnail)
+        const logo = 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg';
+
+        // 3. Speed Status
         let speedStatus = '';
         if (ping < 100) speedStatus = '🚀 SUPERSONIC';
         else if (ping < 300) speedStatus = '🏎️ FAST';
         else speedStatus = '🐢 SLOW';
 
-        // 4. Fake Jitter & Upload Speed (For "Pro" look)
+        // 4. Extra Info (Pro Look)
         const jitter = Math.floor(Math.random() * 10);
         const ramUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
 
-        // 5. Fake "Official" Quote
+        // 5. Meta Quote (Fake Official)
         const metaQuote = {
-            key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "PING_TEST_V1" },
-            message: { 
-                contactMessage: { 
-                    displayName: "Network Speed Test", 
-                    vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Speed;Test;;;\nFN:Speed Test\nORG:Meta\nEND:VCARD` 
-                } 
+            key: {
+                remoteJid: "status@broadcast",
+                participant: "0@s.whatsapp.net",
+                fromMe: false,
+                id: "PING_TEST_V1"
+            },
+            message: {
+                contactMessage: {
+                    displayName: "Network Speed Test",
+                    vcard: `BEGIN:VCARD
+VERSION:3.0
+N:Speed;Test;;;
+FN:Speed Test
+ORG:Meta
+END:VCARD`
+                }
             }
         };
 
-        // 6. Cyberpunk Style Caption
+        // 6. Message Text
         const text = `
 ╭─⪼ *💗 𝐏𝐈𝐍𝐆 🔐🪄* ⪻─╮
 │
@@ -3596,31 +3610,34 @@ case 'ping': {
 > _${botName} Speed System_
 `;
 
-        // 7. Send as "Context Info" (Large Card Style)
+        // 7. Send Message (Large Card Preview)
         await socket.sendMessage(sender, {
             text: text,
             contextInfo: {
                 externalAdReply: {
                     title: `⚡ PING: ${ping}ms | ${speedStatus}`,
                     body: "🟢 System Status: Online & Stable",
-                    thumbnailUrl: logo, // පෙන්නන්න ඕන ෆොටෝ එක
+                    thumbnailUrl: logo,
                     sourceUrl: "https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23",
                     mediaType: 1,
-                    renderLargerThumbnail: true // ෆොටෝ එක ලොකුවට පෙන්නන්න
+                    renderLargerThumbnail: true
                 }
             }
         }, { quoted: metaQuote });
 
-        // React with Lightning
-        await socket.sendMessage(sender, { react: { text: '⚡', key: msg.key } });
+        // 8. React
+        await socket.sendMessage(sender, {
+            react: { text: '⚡', key: msg.key }
+        });
 
     } catch (e) {
         console.error('Ping error:', e);
-        await socket.sendMessage(sender, { text: '*❌ Ping Failed*' });
+        await socket.sendMessage(sender, {
+            text: '*❌ Ping Failed*'
+        });
     }
     break;
 }
-
 
 case 'rashu': {
   try {
