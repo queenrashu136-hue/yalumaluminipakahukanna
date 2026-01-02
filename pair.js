@@ -2135,7 +2135,7 @@ case 'csend': {
         const oggBuffer = fs.readFileSync(tempOgg);
 
         // Custom Wadan Logic (Safe check added)
-        let customFooter = '> *ᴘᴏᴡᴇʀᴅ ʙʏ 𝐐ᴜᴇᴇɴ 𝐑ᴀꜱʜᴜ 𝐌ɪɴɪ 🎊🎉💗🎈*'; 
+        let customFooter = '⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤'; 
         try {
             if(typeof loadUserConfigFromMongo !== 'undefined') {
                 const userConfig = await loadUserConfigFromMongo(sanitized);
@@ -2193,7 +2193,7 @@ ${customFooter}
     }
     const descText = args.join(' ').trim();
     if (!descText) {
-        return await socket.sendMessage(sender, { text: '❗ Provide a description/footer text.\nExample: `.setdesc 🐦‍🔥 My Official song Channel`' }, { quoted: shonux });
+        return await socket.sendMessage(sender, { text: '❗ Provide a description/footer text.\nExample: `.cfooter 🐦‍🔥 My Official song Channel`' }, { quoted: shonux });
     }
     try {
         let cfg = await loadUserConfigFromMongo(sanitized) || {};
@@ -2213,7 +2213,7 @@ ${customFooter}
         const messages = {
             noCity: "❗ *Please provide a city name!* \n📋 *Usage*: .weather [city name]",
             weather: (data) => `
-*⛩️ Dtec Mini Weather Report 🌤*
+*⛩️ ${botName} Weather Report 🌤*
 
 *━🌍 ${data.name}, ${data.sys.country} 🌍━*
 
@@ -2235,7 +2235,7 @@ ${customFooter}
 
 *🔽 Pressure*: ${data.main.pressure} hPa
 
-> 🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉
+> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*
 `,
             cityNotFound: "🚫 *City not found!* \n🔍 Please check the spelling and try again.",
             error: "⚠️ *An error occurred!* \n🔄 Please try again later."
