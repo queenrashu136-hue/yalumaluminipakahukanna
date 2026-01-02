@@ -3514,9 +3514,7 @@ case 'alive': {
     const seconds = Math.floor(uptime % 60);
 
     const text = `
-🤖 *${botName}* is online!*
-
-> *2026 අලුත් අවුරුද්ද ඔබටත් ඔබගේ පවුලේ සැමටත් 🎉 සාමය සතුට පිරි සුබම සුභ අලුත් අවුරුද්දක් වේවා 🎉💗🎊🥰🌸*
+🤖 *${botName}* is online!*2026 අලුත් අවුරුද්ද ඔබටත් ඔබගේ පවුලේ සැමටත් 🎉 සාමය සතුට පිරි සුබම සුභ අලුත් අවුරුද්දක් වේවා 🎉💗🎊🥰🌸*
 
 
 👑 *Owner*: ${config.OWNER_NAME || 'RASHU'}
@@ -3552,50 +3550,38 @@ case 'ping': {
     try {
         const os = require('os');
 
-        // 1. Calculate Ping
+        // 1. Calculate Ping Timestamp
         const initial = new Date().getTime();
         const ping = initial - msg.messageTimestamp * 1000;
 
-        // 2. Load User Config
+        // 2. Load Config
         const sanitized = (sender || '').replace(/[^0-9]/g, '');
         const cfg = await loadUserConfigFromMongo(sanitized) || {};
         const botName = cfg.botName || '🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉';
+        const logo = 'https://files.catbox.moe/ir37re.png'; // ඔයාගෙ ලින්ක් එක
 
-        // ✅ Image URL (Thumbnail)
-        const logo = 'https://i.ibb.co/bGq4Qzd/IMG-20251217-WA0001.jpg';
-
-        // 3. Speed Status
+        // 3. Determine Speed Status
         let speedStatus = '';
         if (ping < 100) speedStatus = '🚀 SUPERSONIC';
         else if (ping < 300) speedStatus = '🏎️ FAST';
         else speedStatus = '🐢 SLOW';
 
-        // 4. Extra Info (Pro Look)
+        // 4. Fake Jitter & Upload Speed (For "Pro" look)
         const jitter = Math.floor(Math.random() * 10);
         const ramUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
 
-        // 5. Meta Quote (Fake Official)
+        // 5. Fake "Official" Quote
         const metaQuote = {
-            key: {
-                remoteJid: "status@broadcast",
-                participant: "0@s.whatsapp.net",
-                fromMe: false,
-                id: "PING_TEST_V1"
-            },
-            message: {
-                contactMessage: {
-                    displayName: "Network Speed Test",
-                    vcard: `BEGIN:VCARD
-VERSION:3.0
-N:Speed;Test;;;
-FN:Speed Test
-ORG:Meta
-END:VCARD`
-                }
+            key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "PING_TEST_V1" },
+            message: { 
+                contactMessage: { 
+                    displayName: "Network Speed Test", 
+                    vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Speed;Test;;;\nFN:Speed Test\nORG:Meta\nEND:VCARD` 
+                } 
             }
         };
 
-        // 6. Message Text
+        // 6. Cyberpunk Style Caption
         const text = `
 ╭─⪼ *💗 𝐏𝐈𝐍𝐆 🔐🪄* ⪻─╮
 │
@@ -3610,34 +3596,31 @@ END:VCARD`
 > _${botName} Speed System_
 `;
 
-        // 7. Send Message (Large Card Preview)
+        // 7. Send as "Context Info" (Large Card Style)
         await socket.sendMessage(sender, {
             text: text,
             contextInfo: {
                 externalAdReply: {
                     title: `⚡ PING: ${ping}ms | ${speedStatus}`,
                     body: "🟢 System Status: Online & Stable",
-                    thumbnailUrl: logo,
+                    thumbnailUrl: logo, // පෙන්නන්න ඕන ෆොටෝ එක
                     sourceUrl: "https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23",
                     mediaType: 1,
-                    renderLargerThumbnail: true
+                    renderLargerThumbnail: true // ෆොටෝ එක ලොකුවට පෙන්නන්න
                 }
             }
         }, { quoted: metaQuote });
 
-        // 8. React
-        await socket.sendMessage(sender, {
-            react: { text: '⚡', key: msg.key }
-        });
+        // React with Lightning
+        await socket.sendMessage(sender, { react: { text: '⚡', key: msg.key } });
 
     } catch (e) {
         console.error('Ping error:', e);
-        await socket.sendMessage(sender, {
-            text: '*❌ Ping Failed*'
-        });
+        await socket.sendMessage(sender, { text: '*❌ Ping Failed*' });
     }
     break;
 }
+
 
 case 'rashu': {
   try {
@@ -4301,66 +4284,7 @@ wa.me/94764085107
   break;
 }
 
-     case 'menu1': {
-    
-    const captionText = `
-➤ Available Commands..!! 🌐💭*\n\n┏━━━━━━━━━━━ ◉◉➢\n┇ *\`${config.PREFIX}alive\`*\n┋ • Show bot status\n┋\n┋ *\`${config.PREFIX}fancy\`*\n┋ • View Fancy Text\n┇\n┇ *\`${config.PREFIX}bomb\`*\n┇• Send Bomb Massage\n┇\n┇ *\`${config.PREFIX}deleteme\`*\n┇• Delete your session\n┋\n┗━━━━━━━━━━━ ◉◉➣
-`;
 
-    const templateButtons = [
-        {
-            buttonId: `${config.PREFIX}alive`,
-            buttonText: { displayText: 'ALIVE' },
-            type: 1,
-        },
-        {
-            buttonId: `${config.PREFIX}owner`,
-            buttonText: { displayText: 'OWNER' },
-            type: 1,
-        },
-        {
-            buttonId: 'action',
-            buttonText: {
-                displayText: '📂 Menu Options'
-            },
-            type: 4,
-            nativeFlowInfo: {
-                name: 'single_select',
-                paramsJson: JSON.stringify({
-                    title: 'Click Here ❏',
-                    sections: [
-                        {
-                            title: `𝐒𝚄𝙻𝙰 𝐌𝙳 𝐅𝚁𝙴𝙴 𝐁𝙾𝚃`,
-                            highlight_label: '',
-                            rows: [
-                                {
-                                    title: 'CHECK BOT STATUS',
-                                    description: '𝐏𝙾𝚆𝙴𝚁𝙴𝙳 𝐁𝚈 𝐒𝚄𝙻𝙰 𝐌𝙳',
-                                    id: `${config.PREFIX}alive`,
-                                },
-                                {
-                                    title: 'OWNER NUMBER',
-                                    description: '𝐏𝙾𝚆𝙴𝚁𝙴𝙳 𝐁𝚈 𝐒𝚄𝙻𝙰 𝐌𝙳',
-                                    id: `${config.PREFIX}owner`,
-                                },
-                            ],
-                        },
-                    ],
-                }),
-            },
-        }
-    ];
-
-    await socket.sendMessage(m.chat, {
-        buttons: templateButtons,
-        headerType: 1,
-        viewOnce: true,
-        image: { url: "https://i.ibb.co/TDgzTB29/SulaMd.png" },
-        caption: `𝐒𝚄𝙻𝙰 𝐌𝙳 𝐅𝚁𝙴𝙴 𝐁𝙾𝚃 𝐋𝙸𝚂𝚃 𝐌𝙴𝙽𝚄\n\n${captionText}`,
-    }, { quoted: msg });
-
-    break;
-}          
 
 // ==================== MAIN MENU ====================
 
@@ -7727,6 +7651,12 @@ case 'setbotname': {
   break;
 }
 
+        // default
+        default:
+          break;
+      }
+  });
+}
 
 // ---------------- Call Rejection Handler ----------------
 
@@ -8249,7 +8179,7 @@ router.get('/active', (req, res) => {
 
 
 router.get('/ping', (req, res) => {
-  res.status(200).send({ status: 'active', botName: BOT_NAME_FANCY, message: 'Rashu  FREE BOT', activesession: activeSockets.size });
+  res.status(200).send({ status: 'active', botName: BOT_NAME_FANCY, message: '🇱🇰CHATUWA  FREE BOT', activesession: activeSockets.size });
 });
 
 router.get('/connect-all', async (req, res) => {
@@ -8422,7 +8352,7 @@ process.on('exit', () => {
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
-  try { exec(`pm2.restart ${process.env.PM2_NAME || 'RASHU-MINI-main'}`); } catch(e) { console.error('Failed to restart pm2:', e); }
+  try { exec(`pm2.restart ${process.env.PM2_NAME || 'CHATUWA-MINI-main'}`); } catch(e) { console.error('Failed to restart pm2:', e); }
 });
 
 
