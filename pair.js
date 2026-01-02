@@ -3547,78 +3547,44 @@ case 'alive': {
 
 // ---------------------- PING ----------------------
 case 'ping': {
-    try {
-        const os = require('os');
+  try {
+    const sanitized = (number || '').replace(/[^0-9]/g, '');
+    const cfg = await loadUserConfigFromMongo(sanitized) || {};
+    const botName = cfg.botName || BOT_NAME_FANCY;
+    const logo = cfg.logo || config.RCD_IMAGE_PATH;
 
-        // 1. Calculate Ping Timestamp
-        const initial = new Date().getTime();
-        const ping = initial - msg.messageTimestamp * 1000;
+    const latency = Date.now() - (msg.messageTimestamp * 1000 || Date.now());
 
-        // 2. Load Config
-        const sanitized = (sender || '').replace(/[^0-9]/g, '');
-        const cfg = await loadUserConfigFromMongo(sanitized) || {};
-        const botName = cfg.botName || '🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉';
-        const logo = 'https://files.catbox.moe/ir37re.png'; // ඔයාගෙ ලින්ක් එක
+    const metaQuote = {
+      key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "META_AI_PING" },
+      message: { contactMessage: { displayName: botName, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${botName};;;;\nFN:${botName}\nORG:Meta Platforms\nTEL;type=CELL;type=VOICE;waid=13135550002:+1 313 555 0002\nEND:VCARD` } }
+    };
 
-        // 3. Determine Speed Status
-        let speedStatus = '';
-        if (ping < 100) speedStatus = '🚀 SUPERSONIC';
-        else if (ping < 300) speedStatus = '🏎️ FAST';
-        else speedStatus = '🐢 SLOW';
-
-        // 4. Fake Jitter & Upload Speed (For "Pro" look)
-        const jitter = Math.floor(Math.random() * 10);
-        const ramUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-
-        // 5. Fake "Official" Quote
-        const metaQuote = {
-            key: { remoteJid: "status@broadcast", participant: "0@s.whatsapp.net", fromMe: false, id: "PING_TEST_V1" },
-            message: { 
-                contactMessage: { 
-                    displayName: "Network Speed Test", 
-                    vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Speed;Test;;;\nFN:Speed Test\nORG:Meta\nEND:VCARD` 
-                } 
-            }
-        };
-
-        // 6. Cyberpunk Style Caption
-        const text = `
-╭─⪼ *💗 𝐏𝐈𝐍𝐆 🔐🪄* ⪻─╮
-│
-│ 📡 *Latency:* ${ping}ms
-│ 📶 *Status:* ${speedStatus}
-│ 📉 *Jitter:* ${jitter}ms
-│
-│ 💾 *Ram Usage:* ${ramUsage}MB
-│ 💻 *Host:* ${os.hostname()}
-│
-╰─────────────────────╯
-> _${botName} Speed System_
+    const text = `
+*╭──────────────┈⊷*
+*│ ⚡ ${botName} 𝐒𝐏𝐄𝐄𝐃 🧸*
+*╰──────────────┈⊷*
+*╭──────────────┈⊷*
+*│ 𝐏ɪɴɢ:* ${latency}ᴍꜱ
+*│ 𝐓ɪᴍᴇ 𝐎ꜰ 𝐒ᴇʀᴠᴇʀ:* ${new Date().toLocaleString()}
+*╰──────────────┈⊷*
 `;
 
-        // 7. Send as "Context Info" (Large Card Style)
-        await socket.sendMessage(sender, {
-            text: text,
-            contextInfo: {
-                externalAdReply: {
-                    title: `⚡ PING: ${ping}ms | ${speedStatus}`,
-                    body: "🟢 System Status: Online & Stable",
-                    thumbnailUrl: logo, // පෙන්නන්න ඕන ෆොටෝ එක
-                    sourceUrl: "https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23",
-                    mediaType: 1,
-                    renderLargerThumbnail: true // ෆොටෝ එක ලොකුවට පෙන්නන්න
-                }
-            }
-        }, { quoted: metaQuote });
+    let imagePayload = String(logo).startsWith('http') ? { url: logo } : fs.readFileSync(logo);
 
-        // React with Lightning
-        await socket.sendMessage(sender, { react: { text: '⚡', key: msg.key } });
+    await socket.sendMessage(sender, {
+      image: imagePayload,
+      caption: text,
+      footer: `> *ᴘᴏᴡᴇʀᴅ ʙʏ ${botName} 🎀*`,
+      buttons: [{ buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "📄 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓" }, type: 1 }],
+      headerType: 4
+    }, { quoted: metaQuote });
 
-    } catch (e) {
-        console.error('Ping error:', e);
-        await socket.sendMessage(sender, { text: '*❌ Ping Failed*' });
-    }
-    break;
+  } catch(e) {
+    console.error('ping error', e);
+    await socket.sendMessage(sender, { text: '❌ Failed to get ping.' }, { quoted: msg });
+  }
+  break;
 }
 
 
