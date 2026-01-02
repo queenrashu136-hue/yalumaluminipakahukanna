@@ -7655,6 +7655,11 @@ case 'setbotname': {
         default:
           break;
       }
+    } catch (err) {
+      console.error('Command handler error:', err);
+      try { await socket.sendMessage(sender, { image: { url: config.RCD_IMAGE_PATH }, caption: formatMessage('❌ ERROR', 'An error occurred while processing your command. Please try again.', BOT_NAME_FANCY) }); } catch(e){}
+    }
+
   });
 }
 
