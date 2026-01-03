@@ -4250,86 +4250,7 @@ wa.me/94764085107
   break;
 }
 
-case 'setting1':
-case 'st1':
-case 'seti': {
-  // 1. React to the command
-  await socket.sendMessage(sender, { react: { text: '⚙️', key: msg.key } });
 
-  try {
-    // 2. Get basic info & Configs (Setting එකේ වගේම)
-    const sanitized = (number || '').replace(/[^0-9]/g, '');
-    const currentConfig = await loadUserConfigFromMongo(sanitized) || {};
-    const botName = currentConfig.botName || config.BOT_NAME || '⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤';
-    const prefix = currentConfig.PREFIX || config.PREFIX || '.';
-    const ownerNum = config.OWNER_NUMBER;
-
-    // Time & Date setup
-    const date = new Date().toLocaleDateString('si-LK'); // Sri Lanka Date
-    const time = new Date().toLocaleTimeString('si-LK'); // Sri Lanka Time
-
-    // 3. මෙනු එකේ ලිස්ට් එක (Sections විදියට Commands වෙන් කරලා)
-    const sections = [
-      {
-        title: "🔐 𝐖𝐎𝐑𝐊 𝐓𝐘𝐏𝐄",
-        rows: [
-          { title: "Bot Work Type", rowId: `${prefix}wtype public`, description: "PUBLIC DONE ✅" }
-        ]
-      },
-      {
-        title: "Creative Menu",
-        rows: [
-          { title: "Creative Main Menu", rowId: `${prefix}creative`, description: "Creative Menu" }
-        ]
-      },
-      {
-        title: "🛠️ TOOLS & EXTRAS",
-        rows: [
-          { title: "Tool Menu", rowId: `${prefix}tools`, description: "Dtec Tool Menu" }
-        ]
-      },
-      {
-        title: "⚙️ SETTINGS & OWNER",
-        rows: [
-          { title: "Bot Settings", rowId: `${prefix}setting`, description: "Open control panel" },
-          { title: "Owner", rowId: `${prefix}owner`, description: "Owner Of the bot" },
-          { title: "System Info", rowId: `${prefix}ping`, description: "Check ping speed" }
-        ]
-      }
-    ];
-
-    // 4. Menu එකේ උඩින් පෙන්නන විස්තරය (Header Text)
-    const text = `
-╭───「 🤖 *${botName} MENU* 」
-│
-│ 👋 *Hi,* @${sender.split('@')[0]}
-│ 📅 *Date:* ${date}
-│ ⌚ *Time:* ${time}
-│ 🧩 *Prefix:* [ ${prefix} ]
-│ 👑 *Owner:* ${ownerNum}
-│
-│ 👇 *Click "OPEN MENU" to see commands*
-╰────────────────────●
-`;
-
-    // 5. List Message එක යැවීම
-    const listMessage = {
-      text: text,
-      footer: `🔥 POWERED BY ${botName} 🔥`,
-      title: "Main Command List",
-      buttonText: "📜 OPEN MENU", // බටන් එකේ නම
-      sections,
-      mentions: [sender] // මෙන්ශන් එක වැඩ කරන්න දාන්න ඕන
-    };
-
-    await socket.sendMessage(sender, listMessage, { quoted: msg });
-
-  } catch (e) {
-    console.error('Menu command error:', e);
-    await socket.sendMessage(sender, { text: "*❌ Menu එක ලෝඩ් කරන්න බැරි උනා!*" }, { quoted: msg });
-  }
-  break;
-}
 
 // ==================== MAIN MENU ====================
 
@@ -7697,7 +7618,6 @@ case 'setbotname': {
 }
 
         // default
-        default:
           break;
       }
     } catch (err) {
