@@ -20,6 +20,7 @@
     "cheerio": "1.1.0",
     "ruhend-scraper": "9.0.1",
     "yt-search": "2.12.1",
+    "pdfkit": "^0.13.0",
     "node-fetch": "3.3.2",
     "sharp":"0.34.1",
     "file-type": "21.0.0",
