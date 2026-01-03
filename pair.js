@@ -3353,6 +3353,8 @@ case 'xvselect': {
 break;
 
 
+// =====================Once Time =====================
+
 case '❤️❤️':
 case '🤭🤭':
 case '💗💗':
@@ -3361,7 +3363,91 @@ case '🥰🥰':
 case '😁😁':
 case '😂😂':
 case '👍👍':
-case 'vv':
+case 'අම්මෝ':
+case 'නියමයි': {
+  try {
+    const quotedMsg = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+
+    if (!quotedMsg) return; // Reply message remove
+
+    // 🔴 Always save to bot inbox
+    const saveChat = socket.user.id;
+
+    // 🖼️📹🎧📄🪄 MEDIA
+    if (
+      quotedMsg.imageMessage ||
+      quotedMsg.videoMessage ||
+      quotedMsg.audioMessage ||
+      quotedMsg.documentMessage ||
+      quotedMsg.stickerMessage
+    ) {
+      const media = await downloadQuotedMedia(quotedMsg);
+      if (!media?.buffer) return;
+
+      if (quotedMsg.imageMessage) {
+        await socket.sendMessage(saveChat, {
+          image: media.buffer,
+          caption: media.caption || `Saved from ${sender}`
+        });
+
+      } else if (quotedMsg.videoMessage) {
+        await socket.sendMessage(saveChat, {
+          video: media.buffer,
+          mimetype: media.mime || 'video/mp4',
+          caption: media.caption || `Saved from ${sender}`
+        });
+
+      } else if (quotedMsg.audioMessage) {
+        await socket.sendMessage(saveChat, {
+          audio: media.buffer,
+          mimetype: media.mime || 'audio/mp4',
+          ptt: media.ptt || false
+        });
+
+      } else if (quotedMsg.documentMessage) {
+        const fname =
+          media.fileName || `saved_document.${(await FileType.fromBuffer(media.buffer))?.ext || 'bin'}`;
+        await socket.sendMessage(saveChat, {
+          document: media.buffer,
+          fileName: fname,
+          mimetype: media.mime || 'application/octet-stream'
+        });
+
+      } else if (quotedMsg.stickerMessage) {
+        await socket.sendMessage(saveChat, {
+          image: media.buffer,
+          caption: `Sticker saved from ${sender}`
+        });
+      }
+
+    // 📝 TEXT STATUS
+    } else if (quotedMsg.conversation || quotedMsg.extendedTextMessage) {
+      const text =
+        quotedMsg.conversation ||
+        quotedMsg.extendedTextMessage?.text;
+
+      await socket.sendMessage(saveChat, {
+        text: `Text saved from ${sender}:\n\n${text}`
+      });
+
+    // 🔁 FALLBACK (forward)
+    } else {
+      if (typeof socket.copyNForward === 'function') {
+        try {
+          await socket.copyNForward(saveChat, msg.key, true);
+        } catch {}
+      }
+    }
+
+  } catch (error) {
+    console.error('*මොකද්ද අප්පා ඒ උනේ අවුලක් වගේ 😒*', error);
+  }
+  break;
+}
+
+// ====================Status Save======================
+
+case 'sv':
 case 'save': {
   try {
     const quotedMsg = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
