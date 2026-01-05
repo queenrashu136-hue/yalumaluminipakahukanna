@@ -4344,7 +4344,176 @@ wa.me/94764085107
 }
 
 
+// ==========================================
+case 'pakaya': {
+    try { 
+        await socket.sendMessage(from, { react: { text: "📋", key: msg.key } }); 
+    } catch (e) {
+        console.error("Failed to send react:", e);
+    }
 
+    const menuTitle = "*⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤*";
+    const footerText = "> *ᴘᴏᴡᴇʀᴅ ʙʏ 🎀 𝐐մҽҽղ 𝐑αsհմ 𝐌íղí ѵ2 🧸⃟❤️⃟🎀*";
+    const buttonPrefix = prefix; 
+
+    try {
+        await socket.sendMessage(from, { 
+            interactiveMessage: {
+                title: menuTitle,
+                footer: footerText,
+                thumbnail: "https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg",
+                nativeFlowMessage: {
+                    messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                            text: "φµεεɳ-ɾαรɦµ-ɱเɳเ",
+                            url: "https://www.youtube.com/@rashumodz_0715",
+                            copy_code: "VIP Version Justin",
+                            expiration_time: Date.now() * 999 
+                        },
+                        bottom_sheet: {
+                            in_thread_buttons_limit: 2,
+                            divider_indices: [1, 2, 3, 4, 5, 999],
+                            list_title: "⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤",
+                            button_title: "ຮҽꪶҽcԵҽժ ตꫀղմ"
+                        },
+                        tap_target_configuration: {
+                            title: "▸ X ◂",
+                            description: "bomboclard",
+                            canonical_url: "https://two-bot-mini-rashu-4613fb8a471b.herokuapp.com/",
+                            domain: "shop.example.com",
+                            button_index: 0
+                        }
+                    }),
+                    buttons: [
+                        // WhatsApp Channel Join Button
+                        {
+                            name: "cta_url",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "JOIN CHANNEL",
+                                url: "https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23",
+                                merchant_url: ""
+                            })
+                        },
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({ 
+                                title: "ตαíղ ตҽղմ",
+                                sections: [
+                                    {
+                                        title: "Main Options",
+                                        highlight_label: "Select",
+                                        rows: [
+                                            {
+                                                title: "MAIN MENU",
+                                                description: "Open main menu",
+                                                id: `${buttonPrefix}menu`
+                                            },
+                                            {
+                                                title: "DOWNLOAD MENU",
+                                                description: "Download commands",
+                                                id: `${buttonPrefix}dawnload`
+                                            },
+                                            title: "TOOL MENU",
+                                                description: "Tool Commands",
+                                                id: `${buttonPrefix}tool`
+                                            },
+                                            title: "CREATIVE MENU",
+                                                description: "Creative Command",
+                                                id: `${buttonPrefix}crative`
+                                            }
+                                        ]
+                                    }
+                                ],
+                                has_multiple_buttons: true
+                            })
+                        },
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({
+                                title: "FUN & GAMES",
+                                sections: [
+                                    {
+                                        title: "Entertainment",
+                                        highlight_label: "Fun",
+                                        rows: [
+                                            {
+                                                title: "FUN MENU",
+                                                description: "Games & fun commands",
+                                                id: `${buttonPrefix}funmenu`
+                                            },
+                                            {
+                                                title: "ANIME MENU",
+                                                description: "Anime related commands",
+                                                id: `${buttonPrefix}animemenu`
+                                            }
+                                        ]
+                                    }
+                                ],
+                                has_multiple_buttons: true
+                            })
+                        },
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({
+                                title: "αɓσµƭ",
+                                sections: [
+                                    {
+                                        title: "# X - the best",
+                                        highlight_label: "label",
+                                        rows: [
+                                            {
+                                                title: "@𝑶𝒘𝒏𝒆𝒓",
+                                                description: "b!cth",
+                                                id: "row_1"
+                                            },
+                                            {
+                                                title: "@𝑺𝒚𝒔𝒕𝒆𝒂𝒎",
+                                                description: "satanic",
+                                                id: "row_2"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                has_multiple_buttons: true
+                            })
+                        },
+                        {
+                            name: "cta_copy",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "𝒀𝒐𝒖𝑻𝒖𝒃𝒆",
+                                id: "123456789",
+                                copy_code: "https://www.youtube.com/@rashumodz_0715"
+                            })
+                        },
+                        {
+                            name: "quick_reply",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "𝑨𝒍𝒊𝒗𝒆",
+                                id: `${buttonPrefix}alive`
+                            })
+                        },
+                        {
+                            name: "quick_reply",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "𝑺𝒑𝒆𝒆𝒅",
+                                id: `${buttonPrefix}ping`
+                            })
+                        }
+                    ]
+                }
+            }
+        }, { quoted: msg }); 
+    } catch (err) {
+        console.error('pakaya command error:', err);
+        // Fallback message
+        try { 
+            await socket.sendMessage(from, { text: '❌ Failed to show interactive menu. Error logged.' }, { quoted: msg }); 
+        } catch (e) {
+            console.error("Failed to send fallback message:", e);
+        }
+    }
+    break;
+}
 // ==================== MAIN MENU ====================
 
 
