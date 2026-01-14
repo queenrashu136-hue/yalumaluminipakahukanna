@@ -53,7 +53,7 @@ const config = {
 // ---------------- MONGO SETUP ----------------
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://Dileepa:dileepa321@cluster0.mrhh2p0.mongodb.net/';
-const MONGO_DB = process.env.MONGO_DB || 'RASHUTWO1_MINI';
+const MONGO_DB = process.env.MONGO_DB || 'TEST000_MINI';
 
 let mongoClient, mongoDB;
 let sessionsCol, numbersCol, adminsCol, newsletterCol, configsCol, newsletterReactsCol;
@@ -4753,453 +4753,351 @@ case 'tools': {
   }
   break;
 }
-                case 'song': {
-                    const yts = require('yt-search');
+case 'song': {
+    const yts = require("yt-search");
 
-                    function extractYouTubeId(url) {
-                        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-                        const match = url.match(regex);
-                        return match ? match[1] : null;
-                    }
+    // Text එක ගන්න විදිය
+    const text = msg.message?.conversation || 
+                 msg.message?.extendedTextMessage?.text || 
+                 msg.message?.imageMessage?.caption || 
+                 msg.message?.videoMessage?.caption || '';
 
-                    function convertYouTubeLink(input) {
-                        const videoId = extractYouTubeId(input);
-                        if (videoId) {
-                            return `https://www.youtube.com/watch?v=${videoId}`;
-                        }
-                        return input;
-                    }
+    const q = text.replace(/^[.\/!](song|play)\s*/i, '').trim();
 
-                    const q = msg.message?.conversation ||
-                        msg.message?.extendedTextMessage?.text ||
-                        msg.message?.imageMessage?.caption ||
-                        msg.message?.videoMessage?.caption || '';
-
-                    if (!q || q.trim() === '') {
-                        return await socket.sendMessage(sender, {
-                            text: '*`Need YT_URL or Title`*'
-                        });
-                    }
-
-                    const fixedQuery = convertYouTubeLink(q.trim());
-                    const search = await yts(fixedQuery);
-                    const data = search.videos[0];
-                    if (!data) {
-                        return await socket.sendMessage(sender, {
-                            text: '*`No results found`*'
-                        });
-                    }
-
-                    const url = data.url;
-                    const desc = `*🎧 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🌿**\n\n╭▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▯●\n▮ \`• Title :\`  ${data.title}\n▯ \`• Duration :\` ${data.duration.timestamp}\n▮ \`• Views :\` ${data.views.toLocaleString()}\n▯ \`• Released Date :\` ${data.ago}\n╰▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▯●\n\n> *𝐏σωεɾ∂ 𝐁ყ ⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤ 🌿*`;
-
-                    const buttons = [{
-                            buttonId: `${config.PREFIX}audio ${url}`,
-                            buttonText: {
-                                displayText: '🎧 𝐀մժíօ'
-                            },
-                            type: 1
-                        },
-                        {
-                            buttonId: `${config.PREFIX}voice ${url}`,
-                            buttonText: {
-                                displayText: '🎤 𝐕օícҽ'
-                            },
-                            type: 1
-                        },
-                        {
-                            buttonId: `${config.PREFIX}document ${url}`,
-                            buttonText: {
-                                displayText: '📁 𝐃օcմตҽղԵ'
-                            },
-                            type: 1
-                        }
-                    ];
-
-                    await socket.sendMessage(sender, {
-                        buttons,
-                        headerType: 1,
-                        viewOnce: true,
-                        caption: desc,
-                        image: {
-                            url: data.thumbnail
-                        },
-                        contextInfo: {
-                            mentionedJid: [sender],
-                            forwardingScore: 999,
-                            isForwarded: true,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: '120363292101892024@newsletter',
-                                newsletterName: '⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤',
-                                serverMessageId: 143
-                            }
-                        }
-                    }, {
-                        quoted: rashuminibot
-                    });
-
-                    break;
-                }
-
-
-                case 'audio': {
-                    const axios = require('axios');
-                    const videoUrl = args[0] || q;
-
-                    try {
-                        const apiUrl = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
-                        const apiRes = await axios.get(apiUrl, {
-                            timeout: 15000
-                        }).then(r => r.data).catch(() => null);
-
-                        const downloadUrl = apiRes?.result?.download?.url;
-                        const title = apiRes?.result?.title;
-
-                        if (!downloadUrl) {
-                            await socket.sendMessage(sender, {
-                                text: '*MP3 API returned no download URL*'
-                            }, {
-                                quoted: rashuminibot
-                            });
-                            break;
-                        }
-
-                        await socket.sendMessage(sender, {
-                            audio: {
-                                url: downloadUrl
-                            },
-                            mimetype: "audio/mpeg",
-                            fileName: `${title}.mp3`
-                        }, {
-                            quoted: rashuminibot
-                        });
-
-                    } catch {
-                        await socket.sendMessage(sender, {
-                            text: '*Error while processing audio request.*'
-                        }, {
-                            quoted: rashuminibot
-                        });
-                    }
-                    break;
-                }
-
-                case 'doc': {
-                    const axios = require('axios');
-                    const videoUrl = args[0] || q;
-
-                    try {
-                        const apiUrl = `https://movanest.xyz/v2/ytmp4?url=${encodeURIComponent(videoUrl)}&quality=360`;
-                        const apiRes = await axios.get(apiUrl, {
-                            timeout: 15000
-                        }).then(r => r.data);
-
-                        const video = apiRes?.results?.download;
-
-                        if (!video?.url) {
-                            await socket.sendMessage(sender, {
-                                text: '*360p video not found*'
-                            }, {
-                                quoted: rashuminibot
-                            });
-
-                            break;
-                        }
-
-                        await socket.sendMessage(sender, {
-                            document: {
-                                url: video.url
-                            },
-                            mimetype: 'video/mp4',
-                            fileName: video.filename
-                        }, {
-                            quoted: rashuminibot
-                        });
-
-                    } catch {
-                        await socket.sendMessage(sender, {
-                            text: '*Error while processing document request*'
-                        }, {
-                            quoted: rashuminibot
-                        });
-                    }
-                    break;
-                }
-
-                case 'vnote': {
-                    const axios = require('axios');
-                    const videoUrl = args[0] || q;
-
-                    try {
-                        const apiUrl = `https://movanest.xyz/v2/ytmp4?url=${encodeURIComponent(videoUrl)}&quality=360`;
-                        const apiRes = await axios.get(apiUrl, {
-                            timeout: 15000
-                        }).then(r => r.data);
-
-                        const video = apiRes?.results?.download;
-
-                        if (!video?.url) {
-                            await socket.sendMessage(sender, {
-                                text: '*360p video not found*'
-                            }, {
-                                quoted: rashuminibot
-                            });
-
-                            break;
-                        }
-
-                        await socket.sendMessage(sender, {
-                            video: {
-                                url: video.url
-                            },
-                            mimetype: 'video/mp4',
-                            ptv: true,
-                            fileName: video.filename
-                        }, {
-                            quoted: rashuminibot
-                        });
-
-                    } catch {
-                        await socket.sendMessage(sender, {
-                            text: '*Error while processing video note*'
-                        }, {
-                            quoted: rashuminibot
-                        });
-                    }
-                    break;
-                }
-
-                case 'normal': {
-                    const axios = require('axios');
-                    const videoUrl = args[0] || q;
-
-                    try {
-                        const apiUrl = `https://movanest.xyz/v2/ytmp4?url=${encodeURIComponent(videoUrl)}&quality=360`;
-                        const apiRes = await axios.get(apiUrl, {
-                            timeout: 15000
-                        }).then(r => r.data);
-
-                        const video = apiRes?.results?.download;
-
-                        if (!video?.url) {
-                            await socket.sendMessage(sender, {
-                                text: '*360p video not found*'
-                            }, {
-                                quoted: rashuminibot
-                            });
-
-                            break;
-                        }
-
-                        await socket.sendMessage(sender, {
-                            video: {
-                                url: video.url
-                            },
-                            mimetype: 'video/mp4',
-                            fileName: video.filename
-                        }, {
-                            quoted: rashuminibot
-                        });
-
-                    } catch (e) {
-                        await socket.sendMessage(sender, {
-                            text: '*Error while processing video request*'
-                        }, {
-                            quoted: rashuminibot
-                        });
-                    }
-                    break;
-                }
-                
-case 'voice': {
-    const axios = require("axios");
-    const fs = require("fs");
-    const path = require("path");    
-    const ffmpeg = require("fluent-ffmpeg");
-    const ffmpegPath = require("ffmpeg-static");
-    ffmpeg.setFfmpegPath(ffmpegPath);
-
-    const videoUrl = args[0] || q;
+    if (!q) {
+        return await socket.sendMessage(sender, { text: "🎵 *Please provide a song name!*" }, { quoted: msg });
+    }
 
     try {
-        const apiUrl = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
-        const apiRes = await axios.get(apiUrl, { timeout: 15000 }).then(r => r.data);
+        await socket.sendMessage(sender, { react: { text: '🔎', key: msg.key } });
 
-        const downloadUrl = apiRes?.result?.download?.url;
-        const title = apiRes?.result?.title || "voice";
-
-        if (!downloadUrl) {
-            await socket.sendMessage(sender, {
-                text: '*MP3 API returned no download URL*'
-            });
-            break;
+        // Search YouTube
+        const s = await yts(q);
+        if (!s?.videos?.length) {
+            return await socket.sendMessage(sender, { text: "❌ No results found!" }, { quoted: msg });
         }
+        
+        const video = s.videos[0];
+        const url = video.url;
+        const title = video.title;
 
-        const tempMp3 = path.join("/tmp", `voice_${Date.now()}.mp3`);
-        const tempOpus = path.join("/tmp", `voice_${Date.now()}.opus`);
+        // JSON Payloads for buttons (Shortened to avoid limits)
+        // u = url, t = title (first 20 chars), f = format (a=audio, d=doc, p=ptt)
+        const cleanTitle = title.substring(0, 20);
+        
+        const payloadAudio = JSON.stringify({ u: url, t: cleanTitle, f: 'a' });
+        const payloadDoc = JSON.stringify({ u: url, t: cleanTitle, f: 'd' });
+        const payloadPtt = JSON.stringify({ u: url, t: cleanTitle, f: 'p' });
 
-        const mp3Data = await axios.get(downloadUrl, { responseType: "arraybuffer" });
-        fs.writeFileSync(tempMp3, Buffer.from(mp3Data.data));
+        const caption = `🎧 *🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉* 🎧
+        
+📌 *Title:* ${title}
+⏱️ *Duration:* ${video.timestamp}
+👤 *Channel:* ${video.author.name}
+🔗 *Link:* ${url}
 
-        await new Promise((resolve, reject) => {
-            ffmpeg(tempMp3)
-                .audioCodec("libopus")
-                .format("opus")
-                .save(tempOpus)
-                .on("end", resolve)
-                .on("error", reject);
-        });
+_Select a format below to download_ 👇`;
 
-        const opusBuffer = fs.readFileSync(tempOpus);
+        // Sending Button Message
+        const buttons = [
+            { buttonId: `${config.PREFIX}song-dl ${payloadAudio}`, buttonText: { displayText: "🎵 AUDIO" }, type: 1 },
+            { buttonId: `${config.PREFIX}song-dl ${payloadDoc}`, buttonText: { displayText: "📂 DOCUMENT" }, type: 1 },
+            { buttonId: `${config.PREFIX}song-dl ${payloadPtt}`, buttonText: { displayText: "🎤 VOICE NOTE" }, type: 1 }
+        ];
 
-        await socket.sendMessage(sender, {
-            audio: opusBuffer,
-            mimetype: "audio/ogg; codecs=opus",
-            ptt: true
-        });
+        await socket.sendMessage(sender, { 
+            image: { url: video.thumbnail }, 
+            caption: caption,
+            buttons: buttons,
+            headerType: 4
+        }, { quoted: msg });
 
-        try { fs.unlinkSync(tempMp3); } catch {}
-        try { fs.unlinkSync(tempOpus); } catch {}
-
-    } catch {
-        await socket.sendMessage(sender, {
-            text: '*Error while processing audio request.*'
-        });
+    } catch (err) {
+        console.error("Song Search Error:", err);
+        await socket.sendMessage(sender, { text: "❌ Search Error" });
     }
     break;
 }
-                
-                case 'document': {
-                    const axios = require('axios');
-                    const videoUrl = args[0] || q;
 
-                    try {
-                        const apiUrl = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
-                        const apiRes = await axios.get(apiUrl, {
-                            timeout: 15000
-                        }).then(r => r.data).catch(() => null);
+// ======================================================================
+// 2. DOWNLOAD HANDLER (Button Select කලහම වැඩ කරන කොටස)
+// ======================================================================
+case 'song-dl': {
+    const axios = require("axios");
+    const fs = require('fs');
+    const { exec } = require('child_process');
 
-                        const downloadUrl = apiRes?.result?.download?.url;
-                        const title = apiRes?.result?.title;
+    try {
+        // Button ID එකෙන් Data ගන්න විදිය
+        const buttonId = msg.message?.buttonsResponseMessage?.selectedButtonId || 
+                         msg.message?.templateButtonReplyMessage?.selectedId || 
+                         msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+                         msg.message?.conversation || 
+                         msg.message?.extendedTextMessage?.text || '';
 
-                        if (!downloadUrl) {
-                            await socket.sendMessage(sender, {
-                                text: '*MP3 API returned no download URL*'
-                            }, {
-                                quoted: rashuminibot
-                            });
-                            break;
-                        }
+        const jsonStartIndex = buttonId.indexOf('{');
+        if (jsonStartIndex === -1) {
+             console.log("Invalid Button Data");
+             break;
+        }
 
-                        await socket.sendMessage(sender, {
-                            document: {
-                                url: downloadUrl
-                            },
-                            mimetype: "audio/mpeg",
-                            fileName: `${title}.mp3`
-                        }, {
-                            quoted: rashuminibot
-                        });
+        const jsonStr = buttonId.slice(jsonStartIndex);
+        const data = JSON.parse(jsonStr);
+        const { u: url, t: title, f: format } = data;
 
-                    } catch {
-                        await socket.sendMessage(sender, {
-                            text: '*Error while processing audio request.*'
-                        }, {
-                            quoted: rashuminibot
-                        });
-                    }
-                    break;
+        await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
+        await socket.sendMessage(sender, { text: `⬇️ *Downloading ${title}...*` }, { quoted: msg });
+
+        // --- Helper: Download API Logic ---
+        const AXIOS_DEFAULTS = { headers: { "User-Agent": "Mozilla/5.0" } };
+        
+        const tryRequest = async (fn) => {
+            try { return await fn(); } catch { return null; }
+        };
+
+        // Try downloading using multiple APIs
+        let downloadUrl = null;
+        
+        // API 1: Izumi
+        if (!downloadUrl) {
+            const api = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
+            const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
+            if (res?.data?.result?.download) downloadUrl = res.data.result.download;
+        }
+
+        // API 2: Okatsu (Fallback)
+        if (!downloadUrl) {
+            const api = `https://okatsu-rolezapiiz.vercel.app/downloader/ytmp3?url=${encodeURIComponent(url)}`;
+            const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
+            if (res?.data?.dl) downloadUrl = res.data.dl;
+        }
+
+        if (!downloadUrl) {
+            await socket.sendMessage(sender, { text: "❌ Download Failed. Try again later." }, { quoted: msg });
+            break;
+        }
+
+        // --- Sending Logic Based on Format ---
+
+        // 1. AUDIO (MP3)
+        if (format === 'a') {
+            await socket.sendMessage(sender, { 
+                audio: { url: downloadUrl }, 
+                mimetype: "audio/mpeg", 
+                caption: `🎵 *${title}*` 
+            }, { quoted: msg });
+        }
+        
+        // 2. DOCUMENT (MP3 File)
+        else if (format === 'd') {
+            await socket.sendMessage(sender, { 
+                document: { url: downloadUrl }, 
+                mimetype: "audio/mpeg", 
+                fileName: `${title}.mp3`,
+                caption: `📂 *${title}*` 
+            }, { quoted: msg });
+        }
+
+        // 3. VOICE NOTE (PTT - OGG Conversion)
+        else if (format === 'p') {
+            // PTT යවන්න නම් MP3 එක Download කරලා FFMPEG වලින් OGG කරන්න ඕනේ
+            
+            const randomID = Math.floor(Math.random() * 10000);
+            const mp3Path = `./temp_${randomID}.mp3`;
+            const oggPath = `./temp_${randomID}.ogg`;
+
+            // Download File
+            const writer = fs.createWriteStream(mp3Path);
+            const response = await axios({ url: downloadUrl, method: 'GET', responseType: 'stream' });
+            response.data.pipe(writer);
+
+            await new Promise((resolve, reject) => {
+                writer.on('finish', resolve);
+                writer.on('error', reject);
+            });
+
+            // Convert MP3 to OGG (Voice Note Format)
+            exec(`ffmpeg -i "${mp3Path}" -c:a libopus "${oggPath}"`, async (error) => {
+                if (error) {
+                    console.error("FFMPEG Error:", error);
+                    await socket.sendMessage(sender, { text: "❌ Error converting to Voice Note." }, { quoted: msg });
+                } else {
+                    // Send Voice Note
+                    await socket.sendMessage(sender, { 
+                        audio: fs.readFileSync(oggPath), 
+                        mimetype: 'audio/ogg; codecs=opus', 
+                        ptt: true 
+                    }, { quoted: msg });
                 }
 
-                case 'video': {
-                    const yts = require('yt-search');
+                // Clean up files
+                if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path);
+                if (fs.existsSync(oggPath)) fs.unlinkSync(oggPath);
+            });
+        }
 
-                    function extractYouTubeId(url) {
-                        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-                        const match = url.match(regex);
-                        return match ? match[1] : null;
-                    }
+        await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
 
-                    function convertYouTubeLink(input) {
-                        const videoId = extractYouTubeId(input);
-                        if (videoId) {
-                            return `https://www.youtube.com/watch?v=${videoId}`;
-                        }
-                        return input;
-                    }
+    } catch (e) {
+        console.error("Song-DL Error:", e);
+        await socket.sendMessage(sender, { text: "❌ Error Processing Request." });
+    }
+    break;
+}
+// ======================================================================
+// 1. VIDEO SEARCH & MENU COMMAND
+// ======================================================================
+case 'video': {
+    const yts = require("yt-search");
 
-                    const q = msg.message?.conversation ||
-                        msg.message?.extendedTextMessage?.text ||
-                        msg.message?.imageMessage?.caption ||
-                        msg.message?.videoMessage?.caption || '';
+    // Text එක ගන්න විදිය
+    const text = msg.message?.conversation || 
+                 msg.message?.extendedTextMessage?.text || 
+                 msg.message?.imageMessage?.caption || 
+                 msg.message?.videoMessage?.caption || '';
 
-                    if (!q || q.trim() === '') {
-                        return await socket.sendMessage(sender, {
-                            text: '*`Need YT_URL or Title`*'
-                        });
-                    }
+    const q = text.replace(/^[.\/!](video|ytv)\s*/i, '').trim();
 
-                    const fixedQuery = convertYouTubeLink(q.trim());
-                    const search = await yts(fixedQuery);
-                    const data = search.videos[0];
-                    if (!data) {
-                        return await socket.sendMessage(sender, {
-                            text: '*`No results found`*'
-                        });
-                    }
+    if (!q) {
+        return await socket.sendMessage(sender, { text: "🎬 *Please provide a video name!*" }, { quoted: msg });
+    }
 
-                    const url = data.url;
-                    const desc = `*📽️ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🌿*\n\n╭▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▯●\n▮ \`• Title :\`  ${data.title}\n▯ \`• Duration :\` ${data.duration.timestamp}\n▮ \`• Views :\` ${data.views.toLocaleString()}\n▯ \`• Released Date :\` ${data.ago}\n╰▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬▯●\n\n> *𝐏σωεɾ∂ 𝐁ყ ⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤ 🌿*`;
+    try {
+        await socket.sendMessage(sender, { react: { text: '🔎', key: msg.key } });
 
-                    const buttons = [{
-                            buttonId: `${config.PREFIX}normal ${url}`,
-                            buttonText: {
-                                displayText: '📽️ ѵíժҽօ'
-                            },
-                            type: 1
-                        },
-                        {
-                            buttonId: `${config.PREFIX}vnote ${url}`,
-                            buttonText: {
-                                displayText: '🎥 ѵíժҽօ ղօԵҽ'
-                            },
-                            type: 1
-                        },
-                        {
-                            buttonId: `${config.PREFIX}doc ${url}`,
-                            buttonText: {
-                                displayText: '📁 ժօcմตҽղԵ'
-                            },
-                            type: 1
-                        }
-                    ];
+        // Search YouTube
+        const s = await yts(q);
+        if (!s?.videos?.length) {
+            return await socket.sendMessage(sender, { text: "❌ No videos found!" }, { quoted: msg });
+        }
+        
+        const video = s.videos[0];
+        const url = video.url;
+        const title = video.title;
 
-                    await socket.sendMessage(sender, {
-                        buttons,
-                        headerType: 1,
-                        viewOnce: true,
-                        caption: desc,
-                        image: {
-                            url: data.thumbnail
-                        },
-                        contextInfo: {
-                            mentionedJid: [sender],
-                            forwardingScore: 999,
-                            isForwarded: true,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: '120363292101892024@newsletter',
-                                newsletterName: '⏤͟͟͞͞ 𝐂𝐘𝐁𝚵𝐑 ꪶ鍶ꫂ 𝐑𝐔𝐒𝐇 𝐌𝚯𝐃𝐙  ͟͞⏤',
-                                serverMessageId: 143
-                            }
-                        }
-                    }, {
-                        quoted: rashuminibot
-                    });
+        // JSON Payloads (Button Limit එකට අහුවෙන නිසා Title එක කෙටි කරනවා)
+        // u = url, t = title (first 20 chars), f = format (v=video, d=doc)
+        const cleanTitle = title.substring(0, 20);
+        
+        const payloadVideo = JSON.stringify({ u: url, t: cleanTitle, f: 'v' });
+        const payloadDoc = JSON.stringify({ u: url, t: cleanTitle, f: 'd' });
 
-                    break;
-                }
-                
-                
+        const caption = `🎬 *🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉* 🎬
+        
+📌 *Title:* ${title}
+⏱️ *Duration:* ${video.timestamp}
+👤 *Channel:* ${video.author.name}
+🔗 *Link:* ${url}
+
+_Select a format below to download_ 👇`;
+
+        // Sending Button Message
+        const buttons = [
+            { buttonId: `${config.PREFIX}video-dl ${payloadVideo}`, buttonText: { displayText: "🎥 VIDEO" }, type: 1 },
+            { buttonId: `${config.PREFIX}video-dl ${payloadDoc}`, buttonText: { displayText: "📂 DOCUMENT" }, type: 1 }
+        ];
+
+        await socket.sendMessage(sender, { 
+            image: { url: video.thumbnail }, 
+            caption: caption,
+            buttons: buttons,
+            headerType: 4
+        }, { quoted: msg });
+
+    } catch (err) {
+        console.error("Video Search Error:", err);
+        await socket.sendMessage(sender, { text: "❌ Search Error" });
+    }
+    break;
+}
+
+// ======================================================================
+// 2. VIDEO DOWNLOAD HANDLER (Button Select කලහම වැඩ කරන කොටස)
+// ======================================================================
+case 'video-dl': {
+    const axios = require("axios");
+
+    try {
+        // Button ID එකෙන් Data ගන්න විදිය (Text එකෙන් ගත්තොත් JSON අහුවෙන්නෙ නෑ)
+        const buttonId = msg.message?.buttonsResponseMessage?.selectedButtonId || 
+                         msg.message?.templateButtonReplyMessage?.selectedId || 
+                         msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+                         msg.message?.conversation || 
+                         msg.message?.extendedTextMessage?.text || '';
+
+        // JSON Payload එක වෙන් කරගැනීම
+        const jsonStartIndex = buttonId.indexOf('{');
+        if (jsonStartIndex === -1) {
+             console.log("Invalid Button Data");
+             break;
+        }
+
+        const jsonStr = buttonId.slice(jsonStartIndex);
+        const data = JSON.parse(jsonStr);
+        const { u: url, t: title, f: format } = data;
+
+        await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
+        await socket.sendMessage(sender, { text: `⬇️ *Downloading ${title}...*` }, { quoted: msg });
+
+        // --- Helper: Download API Logic ---
+        const AXIOS_DEFAULTS = { headers: { "User-Agent": "Mozilla/5.0" } };
+        
+        const tryRequest = async (fn) => {
+            try { return await fn(); } catch { return null; }
+        };
+
+        // Try downloading using multiple APIs (Izumi -> Okatsu Fallback)
+        let downloadUrl = null;
+        
+        // API 1: Izumi (720p preferred)
+        if (!downloadUrl) {
+            const api = `https://izumiiiiiiii.dpdns.org/downloader/youtube?url=${encodeURIComponent(url)}&format=720`;
+            const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
+            if (res?.data?.result?.download) downloadUrl = res.data.result.download;
+        }
+
+        // API 2: Okatsu (Fallback)
+        if (!downloadUrl) {
+            const api = `https://okatsu-rolezapiiz.vercel.app/downloader/ytmp4?url=${encodeURIComponent(url)}`;
+            const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
+            if (res?.data?.result?.mp4) downloadUrl = res.data.result.mp4;
+        }
+
+        if (!downloadUrl) {
+            await socket.sendMessage(sender, { text: "❌ Download Failed. Try again later." }, { quoted: msg });
+            break;
+        }
+
+        // --- Sending Logic Based on Format ---
+
+        // 1. VIDEO (Normal)
+        if (format === 'v') {
+            await socket.sendMessage(sender, { 
+                video: { url: downloadUrl }, 
+                mimetype: "video/mp4", 
+                caption: `🎬 *${title}*\n> Powered by 🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉 ` 
+            }, { quoted: msg });
+        }
+        
+        // 2. DOCUMENT (File)
+        else if (format === 'd') {
+            await socket.sendMessage(sender, { 
+                document: { url: downloadUrl }, 
+                mimetype: "video/mp4", 
+                fileName: `${title}.mp4`,
+                caption: `📂 *${title}*` 
+            }, { quoted: msg });
+        }
+
+        await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
+
+    } catch (e) {
+        console.error("Video-DL Error:", e);
+        await socket.sendMessage(sender, { text: "❌ Error Processing Request." });
+    }
+    break;
+}
+
 case 'getdp': {
     try {
         const sanitized = (number || '').replace(/[^0-9]/g, '');
