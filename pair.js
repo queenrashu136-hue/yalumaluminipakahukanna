@@ -37,7 +37,7 @@ const config = {
   PREFIX: '.',
   MAX_RETRIES: 3,
   GROUP_INVITE_LINK: 'https://chat.whatsapp.com/Jumzn66rDOx9UHSs9z4qIL?mode=hqrt2',
-  RCD_IMAGE_PATH: 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg',
+  RCD_IMAGE_PATH: 'https://files.catbox.moe/q7a9q9.jpeg',
   NEWSLETTER_JID: '120363292101892024@newsletter',
   OTP_EXPIRY: 300000,
   OWNER_NUMBER: process.env.OWNER_NUMBER || '94764085107',
@@ -45,9 +45,9 @@ const config = {
   BOT_NAME: '🎉🎊 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐈𝐍𝐈 🎀🎉',
   BOT_VERSION: '1.0.0V',
   OWNER_NAME: 'Nipun Harshana',
-  IMAGE_PATH: 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg',
+  IMAGE_PATH: 'https://files.catbox.moe/q7a9q9.jpeg',
   BOT_FOOTER: '> *ᴘᴏᴡᴇʀᴅ ʙʏ 𝐐ᴜᴇᴇɴ 𝐑ᴀꜱʜᴜ 𝐌ɪɴɪ 02🎊🎉💗🎈*',
-  BUTTON_IMAGES: { ALIVE: 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg' }
+  BUTTON_IMAGES: { ALIVE: 'https://files.catbox.moe/q7a9q9.jpeg' }
 };
 
 // ---------------- MONGO SETUP ----------------
@@ -3813,7 +3813,7 @@ break;
         // --- 2. Prepare Images & Fake Data ---
 
         // Preview Image URL
-        const previewImgUrl = 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg';
+        const previewImgUrl = 'https://files.catbox.moe/q7a9q9.jpeg';
         
         // Fetch Image Buffer for Thumbnail (Required for PDF preview)
         const thumbBuffer = await axios.get(previewImgUrl, { responseType: 'arraybuffer' }).then(res => res.data);
@@ -4393,8 +4393,6 @@ END:VCARD`
 const text = `
 _📜 ${title} Menu List ..._
 
-*2026 අලුත් අවුරුද්ද ඔබටත් ඔබගේ පවුලේ සැමටත් 🎉 සාමය සතුට පිරි සුබම සුභ අලුත් අවුරුද්දක් වේවා 🎉💗🎊🥰🌸*
-
 *📄 𝐁օԵ 𝐍αตҽ :*
 > ${title}
 *⏳ 𝐑մղ 𝐓íตҽ :*
@@ -4417,7 +4415,7 @@ const buttons = [
   { buttonId: `${config.PREFIX}system`, buttonText: { displayText: "🕹️ Sʏꜱᴛᴇᴍ" }, type: 1 }  
 ];  
 
-const defaultImg = 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg';  
+const defaultImg = 'https://files.catbox.moe/q7a9q9.jpeg';  
 const useLogo = userCfg.logo || defaultImg;  
 
 // build image payload (url or buffer)  
@@ -4508,7 +4506,7 @@ case 'download': {
       { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👑 Bᴏᴛ Oᴡɴᴇʀ" }, type: 1 }
     ];
 
-    const defaultImg = 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg';
+    const defaultImg = 'https://files.catbox.moe/q7a9q9.jpeg';
     const useLogo = userCfg.logo || defaultImg;
     let imagePayload = String(useLogo).startsWith('http') ? { url: useLogo } : fs.readFileSync(useLogo);
 
@@ -4593,7 +4591,7 @@ case 'creative': {
       { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👑 Bᴏᴛ Oᴡɴᴇʀ" }, type: 1 }
     ];
 
-    const defaultImg = 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg';
+    const defaultImg = 'https://files.catbox.moe/q7a9q9.jpeg';
     const useLogo = userCfg.logo || defaultImg;
     let imagePayload = String(useLogo).startsWith('http') ? { url: useLogo } : fs.readFileSync(useLogo);
 
@@ -4723,7 +4721,7 @@ case 'tools': {
       { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👑 Bᴏᴛ Oᴡɴᴇʀ" }, type: 1 }  
         ];
 
-    const defaultImg = 'https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg';
+    const defaultImg = 'https://files.catbox.moe/q7a9q9.jpeg';
     const useLogo = userCfg.logo || defaultImg;
     let imagePayload = String(useLogo).startsWith('http') ? { url: useLogo } : fs.readFileSync(useLogo);
 
@@ -4869,7 +4867,7 @@ END:VCARD`
                     const videoUrl = args[0] || q;
 
                     try {
-                        const apiUrl = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
+                        const apiUrl = `https://www.movanest.xyz/v2/yt-vidsave?url=${encodeURIComponent(videoUrl)}&quality=128`;
                         const apiRes = await axios.get(apiUrl, {
                             timeout: 15000
                         }).then(r => r.data).catch(() => null);
@@ -4911,7 +4909,7 @@ END:VCARD`
                     const videoUrl = args[0] || q;
 
                     try {
-                        const apiUrl = `https://movanest.xyz/v2/ytmp4?url=${encodeURIComponent(videoUrl)}&quality=360`;
+                        const apiUrl = `https://www.movanest.xyz/v2/yt-vidsave?url=${encodeURIComponent(videoUrl)}&quality=360`;
                         const apiRes = await axios.get(apiUrl, {
                             timeout: 15000
                         }).then(r => r.data);
@@ -4953,7 +4951,7 @@ END:VCARD`
                     const videoUrl = args[0] || q;
 
                     try {
-                        const apiUrl = `https://movanest.xyz/v2/ytmp4?url=${encodeURIComponent(videoUrl)}&quality=360`;
+                        const apiUrl = `https://www.movanest.xyz/v2/yt-vidsave?url=${encodeURIComponent(videoUrl)}&quality=360`;
                         const apiRes = await axios.get(apiUrl, {
                             timeout: 15000
                         }).then(r => r.data);
@@ -4996,7 +4994,7 @@ END:VCARD`
                     const videoUrl = args[0] || q;
 
                     try {
-                        const apiUrl = `https://movanest.xyz/v2/ytmp4?url=${encodeURIComponent(videoUrl)}&quality=360`;
+                        const apiUrl = `https://www.movanest.xyz/v2/yt-vidsave?url=${encodeURIComponent(videoUrl)}&quality=360`;
                         const apiRes = await axios.get(apiUrl, {
                             timeout: 15000
                         }).then(r => r.data);
@@ -5044,7 +5042,7 @@ case 'voice': {
     const videoUrl = args[0] || q;
 
     try {
-        const apiUrl = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
+        const apiUrl = `https://www.movanest.xyz/v2/yt-vidsave?url=${encodeURIComponent(videoUrl)}&quality=128`;
         const apiRes = await axios.get(apiUrl, { timeout: 15000 }).then(r => r.data);
 
         const downloadUrl = apiRes?.result?.download?.url;
@@ -5096,7 +5094,7 @@ case 'voice': {
                     const videoUrl = args[0] || q;
 
                     try {
-                        const apiUrl = `https://tharuzz-ofc-api-v2.vercel.app/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}&quality=128`;
+                        const apiUrl = `https://www.movanest.xyz/v2/yt-vidsave?url=${encodeURIComponent(videoUrl)}&quality=128`;
                         const apiRes = await axios.get(apiUrl, {
                             timeout: 15000
                         }).then(r => r.data).catch(() => null);
@@ -5265,7 +5263,7 @@ case 'getdp': {
         try {
             ppUrl = await socket.profilePictureUrl(jid, "image");
         } catch {
-            ppUrl = "https://i.ibb.co/rf3DVYr1/20251231-223554-2.jpg"; // default dp
+            ppUrl = "https://files.catbox.moe/q7a9q9.jpeg"; // default dp
         }
 
         // 🔹 BotName meta mention
